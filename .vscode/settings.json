@@ -1,0 +1,10 @@
+{
+    "atlascode.jira.workingSite": {
+        "baseUrlSuffix": "atlassian.net"
+    },
+    "atlascode.jira.workingProject": {
+        "id": "10013",
+        "name": "Loonoy",
+        "key": "LOON"
+    }
+}
