@@ -46,7 +46,14 @@ class CSTSScreen extends React.Component<CSTSScreenProps, CSTSScreenState> {
                 borderBottomWidth: 0,
                 shadowColor: 'transparent'
             },
-            headerRight: (
+            headerRight: (<>
+                {params && !params.isMe && <Icon
+                    style={{ paddingRight: 20 }}
+                    name="heart"
+                    fontSize={25}
+                    color="red"
+                    type="FontAwesome"
+                    onPress={() => params.toggleFavorites()} />}
                 <Icon
                     style={{ paddingRight: 20 }}
                     name="qrcode"
@@ -54,23 +61,33 @@ class CSTSScreen extends React.Component<CSTSScreenProps, CSTSScreenState> {
                     color="white"
                     type="FontAwesome"
                     onPress={() => params.viewQrCode()} />
+            </>
             )
         }
     };
     viewQrCode = () => {
         this.setState({ isOverlayVisible: true });
     }
+    toggleFavorites = () => {
+        if (this.state.profile)
+            FirebaseWorker.toggleCSTSFavorites(this.state.profile.profile.IdtClena)
+    }
     componentDidMount() {
         this.props.navigation.setParams({
-            viewQrCode: () => this.viewQrCode()
+            viewQrCode: () => this.viewQrCode(),
+            toggleFavorites: () => this.toggleFavorites()
         });
         var { params } = this.props.navigation.state;
         if (params && params.idt) {
             CSTS.getDancerAllData(params.idt).then((data) => {
                 this.setState({ profile: data });
                 this.props.navigation.setParams({
-                    name: data.profile.Jmeno + " " + data.profile.Prijmeni
+                    name: data.profile.Jmeno + " " + data.profile.Prijmeni,
+                    isMe: false
                 })
+            })
+            FirebaseWorker.getCstsDataByIdt(params.idt).then((user) => {
+                this.setState({ user: user });
             })
 
         }
@@ -79,19 +96,21 @@ class CSTSScreen extends React.Component<CSTSScreenProps, CSTSScreenState> {
                 CSTS.getDancerAllData(userData.cstsIdt).then((dancerData: DancerData) => {
                     this.setState({ profile: dancerData, user: userData });
                     this.props.navigation.setParams({
-                        name: dancerData.profile.Jmeno + " " + dancerData.profile.Prijmeni
+                        name: dancerData.profile.Jmeno + " " + dancerData.profile.Prijmeni,
+                        isMe: true
+
                     })
                 })
-
-            }
-            )
+            })
         }
 
     }
-    partnerClicked = (partnerIdt: any) => {
-        this.props.navigation.navigate("profile", { idt: partnerIdt })
+    partnerClicked = (partnerIdt: number | string) => {
+        console.log("partnerClick", partnerIdt)
+        this.props.navigation.push("cstsScreen", { idt: partnerIdt })
     };
-    selectImage = (): void => {
+    selectImage(): void {
+        console.log("imageSelected")
         var BUTTONS = ["Vybrat ze souboru", "Vyfotit", "Zrušit"];
         var CANCEL_INDEX = 3;
         ActionSheet.show(
@@ -135,10 +154,10 @@ class CSTSScreen extends React.Component<CSTSScreenProps, CSTSScreenState> {
     };
 
     render() {
-        if (this.state.profile && this.state.user) {
+        if (this.state.profile) {
             return (
                 <BackgroundImage>
-                    <Overlay
+                    {this.state.user && <Overlay
                         windowBackgroundColor="rgba(150, 100, 255, .5)"
                         overlayBackgroundColor="red"
                         borderRadius={25}
@@ -167,7 +186,7 @@ class CSTSScreen extends React.Component<CSTSScreenProps, CSTSScreenState> {
                                 <Text>Zavřít</Text>
                             </Button>
                         </View>
-                    </Overlay>
+                    </Overlay>}
 
                     <CSTSProfile
                         //onHealthCheckPressed={() => this.onHealthCheckPressed()}

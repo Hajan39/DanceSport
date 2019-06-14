@@ -46,13 +46,13 @@ class WDSFScreen extends React.Component<WDSFScreenProps, WDSFScreenState> {
                 shadowColor: 'transparent'
             },
             headerRight: (
-                <Icon
+                params && !params.isMe && <Icon
                     style={{ paddingRight: 20 }}
-                    name="qrcode"
+                    name="heart"
                     fontSize={25}
-                    color="white"
+                    color="red"
                     type="FontAwesome"
-                    onPress={() => params.viewQrCode()} />
+                    onPress={() => params.toggleFavorites()} />
             )
         }
     };
@@ -81,6 +81,12 @@ class WDSFScreen extends React.Component<WDSFScreenProps, WDSFScreenState> {
         )
 
     }
+
+    wdsfProfileClick(id: number): void {
+        console.log("partnerClick", id)
+        this.props.navigation.push("wdsfScreen", { id: id })
+    }
+
     _pickImage = async (image: boolean) => {
         const options = {
             allowsEditing: true,
@@ -99,20 +105,22 @@ class WDSFScreen extends React.Component<WDSFScreenProps, WDSFScreenState> {
             })
         }
     };
-    viewQrCode = () => {
-        this.setState({ isOverlayVisible: true });
+    toggleFavorites = () => {
+        if (this.state.wdsfprofile)
+            FirebaseWorker.toggleWDSFFavorites(this.state.wdsfprofile.profile.id)
     }
     componentDidMount() {
         this.props.navigation.setParams({
-            viewQrCode: () => this.viewQrCode()
+            toggleFavorites: () => this.toggleFavorites()
         });
         var { params } = this.props.navigation.state;
-        if (params && params.idt) {
+        if (params && params.id) {
 
-            WDSF.getDancerAllData(params.min).then((data) => {
+            WDSF.getDancerAllData(params.id).then((data) => {
                 this.setState({ wdsfprofile: data });
                 this.props.navigation.setParams({
-                    name: data.profile.name + " " + data.profile.surname
+                    name: data.profile.name + " " + data.profile.surname,
+                    isMe: false
                 })
             })
         }
@@ -122,7 +130,8 @@ class WDSFScreen extends React.Component<WDSFScreenProps, WDSFScreenState> {
                 WDSF.getDancerAllData(userData.wdsfId).then((dancerData: WdsfDancerData) => {
                     this.setState({ wdsfprofile: dancerData, user: userData });
                     this.props.navigation.setParams({
-                        name: dancerData.profile.name + " " + dancerData.profile.surname
+                        name: dancerData.profile.name + " " + dancerData.profile.surname,
+                        isMe: true
                     })
                 })
             }
@@ -131,40 +140,11 @@ class WDSFScreen extends React.Component<WDSFScreenProps, WDSFScreenState> {
 
     }
     render() {
-        if (this.state.user && this.state.wdsfprofile) {
+        if (this.state.wdsfprofile) {
             return (
                 <BackgroundImage>
-                    <Overlay
-                        windowBackgroundColor="rgba(150, 100, 255, .5)"
-                        overlayBackgroundColor="red"
-                        borderRadius={25}
-                        animationType="fade"
-                        fullScreen={false}
-                        transparent
-                        isVisible={this.state.isOverlayVisible}
-                        overlayStyle={{ justifyContent: "center", backgroundColor: "blue" }}
-                        containerStyle={{ backgroundColor: "red" }}
-                        onBackdropPress={() => this.setState({ isOverlayVisible: false })}
-                        width={Layout.window.width * 0.9}
-                        height={Layout.window.height * 0.9}
-                    >
-                        <View style={{ width: Layout.window.width * 0.9, height: Layout.window.height * 0.9, justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
-                            <QRCode
-                                value={this.state.user.firebaseId}
-                                //Setting the value of QRCode
-                                size={Layout.window.width * 0.8}
-                                //Size of QRCode
-                                bgColor="#000"
-                                //Backgroun Color of QRCode
-                                fgColor="#fff"
-                            //Front Color of QRCode
-                            />
-                            <Button style={{ marginTop: 50 }} block info onPress={() => this.setState({ isOverlayVisible: false })}>
-                                <Text>Zavřít</Text>
-                            </Button>
-                        </View>
-                    </Overlay>
-                    <WDSFProfile profile={this.state.wdsfprofile} user={this.state.user} ></WDSFProfile>
+
+                    <WDSFProfile profile={this.state.wdsfprofile} user={this.state.user} onProfileClicked={(id: number) => this.wdsfProfileClick(id)} ></WDSFProfile>
 
                 </BackgroundImage>
             );

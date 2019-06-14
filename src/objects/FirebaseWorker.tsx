@@ -5,6 +5,7 @@ import firebaseConfig from '../config/firebase';
 import { User, createNewUser } from './firebaseUser';
 import { Profile } from './profileData';
 import { WdsfProfile } from './wdsfData';
+import { QueryDocumentSnapshot, QuerySnapshot } from '@firebase/firestore-types';
 
 firebase.initializeApp(firebaseConfig);
 var db = firebase.firestore();
@@ -52,15 +53,13 @@ async function getUserData(user: firebase.User): Promise<User> {
     return x.data() as User
 }
 
-function registerUser(name: string, surname: string, email: string, password: string): void {
+function registerUser(name: string, surname: string, email: string, password: string, cstsIdt: number | null, wdsfId: number | null): void {
     firebase.auth().createUserWithEmailAndPassword(email, password).then(user => {
         if (user.user) {
             user.user.updateProfile({
                 displayName: name + " " + surname
             })
-            var newUser = user.user;
-            newUser.displayName = name + " " + surname;
-            db.collection('users').doc(user.user.uid).set(createNewUser(newUser));
+            db.collection('users').doc(user.user.uid).set(createNewUser(user.user, name + " " + surname, cstsIdt, wdsfId));
         } else
             throw new Error("USER CANNOT BE CREATED");
     }).catch(err => {
@@ -84,9 +83,91 @@ function updateWDSFProfile(profile: WdsfProfile) {
         })
 }
 
+async function getCstsDataByIdt(cstsIdt: number): Promise<User | undefined> {
+    var querySnapshot = await db.collection("users").where("cstsIdt", "==", cstsIdt).get();
+    if (!querySnapshot.empty)
+        querySnapshot.forEach((doc: QueryDocumentSnapshot) => {
+            return doc.data();
+        });
+    return undefined;
+}
+
+async function getWdsfDataByIdt(wdsfData: number): Promise<User | undefined> {
+    var querySnapshot = await db.collection("users").where("wdsfId", "==", wdsfData).get();
+    if (!querySnapshot.empty)
+        querySnapshot.forEach((doc: QueryDocumentSnapshot) => {
+            return doc.data();
+        });
+    return undefined;
+}
+async function toggleCSTSFavorites(cstsIdt: number) {
+    var cdata = firebase.auth().currentUser;
+    if (cdata) {
+        const userRef = db.collection("users").doc(cdata.uid);
+
+        db.runTransaction(transaction => {
+            // This code may get re-run multiple times if there are conflicts.
+            return transaction.get(userRef).then(doc => {
+                var data = doc.data() as User;
+                if (data.followingCstsIdts) {
+                    transaction.update(userRef, {
+                        followingCstsIdts: [cstsIdt]
+                    });
+                } else {
+                    var bookings = data.followingCstsIdts as number[];
+                    if (bookings.includes(cstsIdt)) {
+                        bookings = bookings.filter(x => x != cstsIdt);
+                    } else
+                        bookings.push(cstsIdt);
+                    transaction.update(userRef, { followingCstsIdts: bookings });
+                }
+            });
+        }).then(function () {
+            console.log("Transaction successfully committed!");
+        }).catch(function (error) {
+            console.log("Transaction failed: ", error);
+        });
+    }
+}
+async function toggleWDSFFavorites(wdsfId: number) {
+    var cdata = firebase.auth().currentUser;
+    if (cdata) {
+        const userRef = db.collection("users").doc(cdata.uid);
+
+        db.runTransaction(transaction => {
+            // This code may get re-run multiple times if there are conflicts.
+            return transaction.get(userRef).then(doc => {
+                var data = doc.data() as User;
+                if (data.followingWdsfIds) {
+                    transaction.update(userRef, {
+                        followingWdsfIds: [wdsfId]
+                    });
+                } else {
+                    var bookings = data.followingWdsfIds as number[];
+                    if (bookings.includes(wdsfId)) {
+                        bookings = bookings.filter(x => x != wdsfId);
+                    } else
+                        bookings.push(wdsfId);
+                    transaction.update(userRef, { followingWdsfIds: bookings });
+                }
+            });
+        }).then(function () {
+            console.log("Transaction successfully committed!");
+        }).catch(function (error) {
+            console.log("Transaction failed: ", error);
+        });
+
+    }
+}
+
+
 const FirebaseWorker = {
+    toggleWDSFFavorites,
+    getCstsDataByIdt,
+    toggleCSTSFavorites,
     registerUser,
     uploadImage,
+    getWdsfDataByIdt,
     loginUser,
     getUserData,
     updateCSTSProfile,

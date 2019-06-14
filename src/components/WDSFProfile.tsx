@@ -3,36 +3,35 @@ import { View, ImageBackground, ScrollView, StyleSheet } from 'react-native';
 import { profile } from 'console';
 import { Avatar } from 'react-native-elements';
 import Colors from '../constants/Colors';
-import { Tabs, ScrollableTab, Tab, Text, ListItem } from 'native-base';
+import { Tabs, ScrollableTab, Tab, Text, ListItem, Card, CardItem } from 'native-base';
 import { WdsfDancerData } from '../objects/wdsfData';
 import { User } from '../objects/firebaseUser';
 import HidingHeaderComponent from './HidingHeaderComponent';
+import Barcode from 'react-native-barcode-builder';
+import BackgroundImage from './BackgroundImage';
+import WDSFListItem from './WDSFListItem';
 
 export interface WDSFProfileProps {
-
+    onProfileClicked: (id: number) => void,
     profile: WdsfDancerData,
     user: User
 }
 
-const defaultImage = "https://scubasanmateo.com/images/dancer-clipart-couple-dance-6.jpg";
+const defaultImage = require("../../assets/profile.png");
 
 class WDSFProfile extends React.Component<WDSFProfileProps, {}> {
 
     render() {
         var { profile, partner } = this.props.profile;
-        var user = this.props.user;
+        var { user } = this.props;
 
         return (
             <View style={styles.container}>
                 <HidingHeaderComponent header={
                     <ImageBackground source={require("../../assets/top.png")} style={{ width: '100%', height: '100%' }} resizeMode="stretch">
                         <View>
-                            {/* <View style={{ alignItems: 'center' }}>
-                            <Text note>{profile.id}</Text>
-                        </View> */}
                             <View style={{
                                 width: "100%",
-                                position: "absolute",
                                 paddingTop: '8%',
                                 alignItems: 'center',
                             }}>
@@ -43,30 +42,30 @@ class WDSFProfile extends React.Component<WDSFProfileProps, {}> {
                                     imageProps={{
                                         resizeMode: 'contain'
                                     }}
-                                    overlayContainerStyle={{ borderWidth: 2, borderColor: Colors.black, borderRadius: 20 }}
-                                    source={{ uri: user.photoUrl || defaultImage }}
+                                    overlayContainerStyle={{ borderWidth: 2, borderColor: Colors.white, borderRadius: 20 }}
+                                    source={user && user.photoUrl ? { uri: user.photoUrl } : defaultImage}
                                     size="large"
                                 //onEditPress={() => this.selectImage()}
                                 ></Avatar>
                             </View>
-                            {/* <View style={{
+                            <View style={{
                                 width: "100%",
-                                position: "absolute",
-                                paddingTop: "15%",
+                                paddingTop: 10,
                                 alignItems: 'center',
                                 flexDirection: "row",
                                 justifyContent: "space-evenly"
                             }}>
-                                <View style={{ alignContent: "center", alignItems: "center" }}>
+                                {/* <View style={{ alignContent: "center", alignItems: "center" }}>
                                     <Text style={{ fontSize: 20, fontWeight: "700" }}>STT - {compData.VykDataStt.Trida}</Text>
                                     <Text style={{ color: Colors.blue }}>{compData.VykDataStt.Body}b, {compData.VykDataStt.FinTuz}F/{compData.VykDataStt.FinZahr}F</Text>
-                                </View>
-                                <View />
+                                </View> */}
+                                {/* <View /> */}
                                 <View style={{ alignContent: "center", alignItems: "center" }}>
-                                    <Text style={{ fontSize: 20, fontWeight: "700" }}>LAT - {compData.VykDataLat.Trida}</Text>
-                                    <Text style={{ color: Colors.blue }}>{compData.VykDataLat.Body}b, {compData.VykDataLat.FinTuz}F/{compData.VykDataLat.FinZahr}F</Text>
+                                    <Text style={{ color: Colors.white }}>Národnost: {this.props.profile.profile.nationality}</Text>
+                                    <Text style={{ color: Colors.white }}>Země: {this.props.profile.profile.country}</Text>
+                                    <Text style={{ color: Colors.white }}>Věková skupina: {this.props.profile.profile.ageGroup}</Text>
                                 </View>
-                            </View> */}
+                            </View>
                             {/* <View style={{
                                 width: "100%",
                                 position: "absolute",
@@ -105,23 +104,39 @@ class WDSFProfile extends React.Component<WDSFProfileProps, {}> {
                     </ImageBackground>} title={this.props.profile.profile.id.toString()}>
                     <Tabs renderTabBar={() => <ScrollableTab style={{ backgroundColor: "transparent" }} backgroundColor="transparent" tabsContainerStyle={{ backgroundColor: "transparent" }} />} style={{ height: "10%", backgroundColor: "transparent" }} >
                         <Tab heading="Informace" tabStyle={{ backgroundColor: 'transparent' }} textStyle={{ color: '#000' }} activeTabStyle={{ backgroundColor: 'transparent' }} activeTextStyle={{ color: Colors.blue, fontWeight: '700', textDecorationLine: "underline", textDecorationStyle: "solid" }}>
-                            <Text>HI</Text>
-                            <Text>HI</Text>
-                            <Text>HI</Text>
-                            <Text>HI</Text>
-                            <Text style={{ backgroundColor: "transparent" }}>HI</Text>
+                            <BackgroundImage>
+
+                                <Text style={{ paddingLeft: 20 }}>Licence</Text>
+                                {this.props.profile.profile.licenses.map((x, i) => {
+                                    return (
+                                        <Card key={i}>
+                                            <CardItem style={{ flexDirection: "column" }}>
+                                                <Text>Typ: {x.type}</Text>
+                                                <Text>Divize: {x.division}</Text>
+                                                <Text>Status: {x.status}</Text>
+                                                <Text>Expirace: {x.expiresOn}</Text>
+                                            </CardItem>
+                                        </Card>
+                                    )
+                                })}
+                                <Barcode value={this.props.profile.profile.id.toString()} format="CODE128" />
+                            </BackgroundImage>
                         </Tab>
                         {partner &&
                             <Tab heading="Partneři(ky)" tabStyle={{ backgroundColor: 'white' }} textStyle={{ color: '#000' }} activeTabStyle={{ backgroundColor: 'white' }} activeTextStyle={{ color: Colors.blue, fontWeight: 'normal', textDecorationLine: "underline", textDecorationStyle: "solid" }}>
-                                <ScrollView style={{ backgroundColor: "lightgrey" }}>
-
-                                    <Text key={partner.id}>{partner.name} {partner.surname}</Text>
-                                </ScrollView>
+                                <BackgroundImage>
+                                    <ScrollView style={{ backgroundColor: "transparent" }}>
+                                        <WDSFListItem name={partner.name + " " + partner.surname} onClick={(id: number) => this.props.onProfileClicked(id)} wdsfIdt={partner.id} />
+                                    </ScrollView>
+                                </BackgroundImage>
                             </Tab>}
                     </Tabs>
                 </HidingHeaderComponent>
             </View >
         );
+    }
+    onPartnerClick(id: number): void {
+        throw new Error("Method not implemented.");
     }
 }
 

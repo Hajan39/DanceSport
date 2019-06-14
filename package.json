@@ -23,13 +23,15 @@
     "native-base": "^2.12.1",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-native-barcode-builder": "^1.0.5",
     "react-native-elements": "^1.1.0",
     "react-native-i18n": "^2.0.15",
     "react-native-image-picker": "^0.28.1",
     "react-native-multibar": "^0.0.6",
     "react-native-qrcode": "^0.2.7",
     "react-native-vector-icons": "^6.4.2",
-    "react-navigation": "^3.6.1"
+    "react-navigation": "^3.6.1",
+    "reinput": "^3.2.0"
   },
   "devDependencies": {
     "@types/expo": "^32.0.10",

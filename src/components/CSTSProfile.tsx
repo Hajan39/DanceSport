@@ -4,7 +4,6 @@ import { Text, Icon, Tabs, Tab, ScrollableTab } from 'native-base';
 import { ImageBackground, TouchableOpacity, StyleSheet, View } from 'react-native';
 import { Avatar } from 'react-native-elements';
 import Colors from '../constants/Colors';
-import { ScrollView } from 'react-native-gesture-handler';
 import InfrormationTab from './profileTabs/InformationTab';
 import PartnerTab from './profileTabs/PartnerTab';
 import CompResultsTab from './profileTabs/CompResultsTab';
@@ -14,18 +13,18 @@ import HidingHeaderComponent from './HidingHeaderComponent';
 
 export interface CSTSProfileProps {
     profile: DancerData,
-    user: User,
+    user: User | undefined,
     selectImage: () => void,
 
     partnerClicked: (idt: string | number) => void
 }
 
-const defaultImage = "https://scubasanmateo.com/images/dancer-clipart-couple-dance-6.jpg";
+const defaultImage = require("../../assets/profile.png");
 
 class CSTSProfile extends React.Component<CSTSProfileProps, {}> {
     render() {
         var { profile, compData, partner, compResults } = this.props.profile;
-        var user = this.props.user;
+        var { user } = this.props;
         return (
             <View style={styles.container}>
                 <HidingHeaderComponent header={
@@ -45,14 +44,14 @@ class CSTSProfile extends React.Component<CSTSProfileProps, {}> {
                                         resizeMode: 'contain'
                                     }}
                                     overlayContainerStyle={{ borderWidth: 2, borderColor: Colors.white, borderRadius: 20 }}
-                                    source={{ uri: user.photoUrl || defaultImage }}
+                                    source={user && user.photoUrl ? { uri: user.photoUrl } : defaultImage}
                                     size="large"
                                     onEditPress={() => this.props.selectImage()}
+                                    onPress={() => this.props.selectImage()}
                                 ></Avatar>
                             </View>
                             <View style={{
                                 width: "100%",
-                                position: "absolute",
                                 paddingTop: "15%",
                                 alignItems: 'center',
                                 flexDirection: "row",
@@ -70,8 +69,7 @@ class CSTSProfile extends React.Component<CSTSProfileProps, {}> {
                             </View>
                             <View style={{
                                 width: "100%",
-                                position: "absolute",
-                                paddingTop: "30%",
+                                paddingTop: 10,
                                 alignItems: 'center',
                                 flexDirection: "row",
                                 justifyContent: "space-evenly"

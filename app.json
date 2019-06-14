@@ -33,5 +33,7 @@
         "READ_EXTERNAL_STORAGE"
       ]
     },
+    "description": "Application for dancers ",
+    "githubUrl": "https://github.com/Hajan39/DanceSport"
   }
 }

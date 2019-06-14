@@ -4,6 +4,7 @@ import { profile } from "console";
 import { Partner, Profile, PartnerItem } from "../../objects/profileData";
 import { ScrollView } from "react-native";
 import BackgroundImage from "../BackgroundImage";
+import CSTSListItem from "../CSTSListItem";
 
 export interface PartnerTabProps {
     partnerClicked: (idt: number) => void,
@@ -24,11 +25,7 @@ class PartnerTab extends React.Component<PartnerTabProps, PartnerTabState> {
                         {this.props.partner.Items.map((partner: PartnerItem) => {
                             var selected = partner.Partner.Idt == this.props.profile.IdtClena ? partner.Partnerka : partner.Partner;
                             return (
-                                <ListItem key={selected.Id} onPress={() =>
-                                    this.props.partnerClicked(selected.Idt)
-                                }>
-                                    <Text>{selected.Jmeno} {selected.Prijmeni}</Text>
-                                </ListItem>
+                                <CSTSListItem key={selected.Idt} cstsIdt={selected.Idt} name={selected.Jmeno + " " + selected.Prijmeni} onClick={this.props.partnerClicked} ></CSTSListItem>
                             )
                         })}
                     </List>
