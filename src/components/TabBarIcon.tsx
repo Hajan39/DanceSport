@@ -13,7 +13,6 @@ class TabBarIcon extends React.Component<TabBarIconProps, {}> {
         return (
             <Icon
                 name={this.props.name}
-                fontSize={24}
                 type="FontAwesome"
                 active={this.props.focused}
                 style={{ color: this.props.focused ? "blue" : "grey", marginBottom: -3 }}
