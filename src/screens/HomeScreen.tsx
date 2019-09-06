@@ -10,62 +10,79 @@ import { getAccessToken, getFeeds } from '../server/facebookCommunicator';
 import { ComponentBase } from 'resub';
 import { User } from '../objects/firebaseUser';
 import UserStore from '../strores/UserStore';
-
-export interface HomeScreenProps extends NavigationScreenProps{
+import {
+    AdMobBanner,
+    AdMobInterstitial,
+    PublisherBanner,
+    AdMobRewarded
+} from 'expo-ads-admob';
+export interface HomeScreenProps extends NavigationScreenProps {
 
 }
 
 export interface HomeScreenState {
     state: object | null,
-    data: FbResponseObject|undefined,
-    user: User|undefined
+    data: FbResponseObject | undefined,
+    user: User | undefined
 }
 
 class HomeScreen extends ComponentBase<HomeScreenProps, HomeScreenState> {
-     protected _buildState(props: HomeScreenProps, initialBuild: boolean): HomeScreenState {
-         var user = UserStore.getUser();
-         
+    protected _buildState(props: HomeScreenProps, initialBuild: boolean): HomeScreenState {
+        var user = UserStore.getUser();
+
         return {
-            state: null, data: undefined,user
+            state: null, data: undefined, user
         }
     }
-    
+
     componentDidMount() {
-        var acctoken = getAccessToken().then(x=> {
+        var acctoken = getAccessToken().then(x => {
             getFeeds(x).then(feeds => {
-                this.setState({ data:feeds  });
+                this.setState({ data: feeds });
             })
         });
-  
+
 
     }
+
+    bannerError = () => {
+
+    }
+
     static navigationOptions = ({ navigation }: NavigationScreenProps) => {
         const { params } = navigation.state;
         return {
-        headerLeft: <Button transparent><Icon name="menu" style={{color: "black"}}
-        onPress={ () => navigation.openDrawer() } /></Button>,
-        title: 'Novinky',
-    }};
+            headerLeft: <Button transparent><Icon name="menu" style={{ color: "black" }}
+                onPress={() => navigation.openDrawer()} /></Button>,
+            title: 'Novinky',
+        }
+    };
     render() {
-        
+
         return (
             <BackgroundImage>
                 <ScrollView  >
-                    <View style={{ flex: 1, alignItems: "center", paddingBottom: 50, height: Layout.window.height }}>
-                    
-                    <Card style={{ width: '90%' }}>
+                    <View style={{ flex: 1, alignItems: "center", height: Layout.window.height }}>
+
+                        <Card style={{ width: '90%' }}>
                             <CardItem cardBody>
-                                <Image source={require("../../assets/logo.png")} />
-                            </CardItem> 
-                            <CardItem>
-                                <Text>{"Vítejte v nové aplikaci pro lidi co milují tanec. Aplikace je určena pro všchnz, kteří mlují tanec a případně jsou i registrovaními členy jednoho z podporovaných spolků. Není-li Váš taneční spolek ještě mezi nimi? Ozvěte se nám a my se pokusíme je přidat."}</Text>
+                                <Image source={require("../../assets/logo.png")} style={{ height: Layout.window.width * 0.9, flex: 1 }} />
                             </CardItem>
-                           
+                            <CardItem>
+                                <Text>{"Vítejte v nové aplikaci pro lidi co milují tanec. Aplikace je určena pro všchny, kteří mlují tanec a případně jsou i registrovanými členy jednoho z podporovaných spolků. Není-li Váš taneční spolek ještě mezi nimi, ozvěte se nám a my se pokusíme jej přidat."}</Text>
+                            </CardItem>
+
                         </Card>
-                        {this.state.data&&
-                         this.state.data.data.map(x=> {
-                            return <Card style={{ width: '90%' }}>
-                            {/* <CardItem>
+                        <AdMobBanner
+
+                            bannerSize="smartBannerPortrait"
+                            adUnitID="ca-app-pub-1900213351962804/6808224429"
+                            testDeviceID="EMULATOR"
+                            onDidFailToReceiveAdWithError={this.bannerError} />
+                        {this.state.data &&
+                            this.state.data.data.map(x => {
+                                return <Card style={{ width: '90%' }}>
+                                    {/* <CardItem>
                                 <Left>
                                     <Thumbnail source={{ uri: 'https://scontent.fprg1-1.fna.fbcdn.net/v/t1.0-9/317460_516571561711890_535922201_n.jpg?_nc_cat=102&_nc_ht=scontent.fprg1-1.fna&oh=f78356ad224009792731e18a6b55cd64&oe=5D91B46E' }} />
                                     <Body>
@@ -74,16 +91,16 @@ class HomeScreen extends ComponentBase<HomeScreenProps, HomeScreenState> {
                                     </Body>
                                 </Left>
                             </CardItem> */}
-                            <CardItem cardBody>
-                                {x.attachments.data && x.attachments.data.map(image=> {
-                                    return <Image source={{ uri: image.media.image.src }} style={{ height: Layout.window.width*0.9/image.media.image.width*image.media.image.height, flex: 1 }} />
-                                })}
-                                
-                            </CardItem> 
-                            <CardItem>
-                                <Text>{x.message}</Text>
-                            </CardItem>
-                            {/* <CardItem>
+                                    <CardItem cardBody>
+                                        {x.attachments.data && x.attachments.data.map(image => {
+                                            return <Image source={{ uri: image.media.image.src }} style={{ height: Layout.window.width * 0.9 / image.media.image.width * image.media.image.height, flex: 1 }} />
+                                        })}
+
+                                    </CardItem>
+                                    <CardItem>
+                                        <Text>{x.message}</Text>
+                                    </CardItem>
+                                    {/* <CardItem>
                                 <Left>
                                     <Button transparent>
                                         <Icon active name="thumbs-up" />
@@ -100,8 +117,8 @@ class HomeScreen extends ComponentBase<HomeScreenProps, HomeScreenState> {
                                     <Text>11h ago</Text>
                                 </Right>
                             </CardItem> */}
-                        </Card>
-                        })}
+                                </Card>
+                            })}
                     </View>
                 </ScrollView>
             </BackgroundImage>

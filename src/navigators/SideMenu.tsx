@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { NavigationActions, } from 'react-navigation';
-import { ScrollView, StyleSheet, Text, View, ImageBackground, SafeAreaView } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, ImageBackground, SafeAreaView, StatusBar } from 'react-native';
 import { User } from '../objects/firebaseUser';
 import { Avatar, Overlay, Divider } from 'react-native-elements';
 import Colors from '../constants/Colors';
@@ -21,7 +21,7 @@ export interface SideMenuState {
     isOverlayVisible: boolean
 }
 class SideMenu extends ComponentBase<SideMenuProps, SideMenuState> {
-     protected _buildState(props: SideMenuProps, initialBuild: boolean): SideMenuState {
+     protected _buildState(props: SideMenuProps, initialBuild: boolean): SideMenuState {       
         return {
             data: UserStore.getUser(),
             isOverlayVisible: false
@@ -156,7 +156,10 @@ class SideMenu extends ComponentBase<SideMenuProps, SideMenuState> {
                         </Button>
                         
                         <Divider />
-
+                        <Button icon full light style={{ justifyContent: "flex-start" }} block onPress={this.navigateToScreen('About')} >
+                            <Icon type="FontAwesome" name="info" />
+                            <Text>O aplikaci</Text>
+                        </Button>
                     </View>
                 </ScrollView>
                 <Button icon full light style={{ justifyContent: "flex-start" }} block onPress={this.navigateToScreen('Settings')} >
@@ -174,11 +177,12 @@ class SideMenu extends ComponentBase<SideMenuProps, SideMenuState> {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 20,
+        paddingTop: StatusBar.currentHeight,
         backgroundColor: Colors.header,
         flex: 1
     },
     headerContainer: {
+        paddingTop: 5,
         backgroundColor: Colors.header,
         height: 100,
         flexDirection: "row"

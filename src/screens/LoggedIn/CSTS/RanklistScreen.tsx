@@ -13,7 +13,12 @@ import RanklistOverlay, { RanklistOverlayState } from '../../../components/Rankl
 import Colors from '../../../constants/Colors';
 import { showProfile } from '../../../functions/cstsFunction';
 import LoadingPage from '../../../objects/loadingPage';
-
+import {
+    AdMobBanner,
+    AdMobInterstitial,
+    PublisherBanner,
+    AdMobRewarded
+} from 'expo-ads-admob';
 export interface RanklistScreenProps extends NavigationScreenProps {
 
 }
@@ -110,8 +115,8 @@ class RanklistScreen extends React.Component<RanklistScreenProps, RanklistScreen
 
                         <ScrollView refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={() => this._onRefresh()} />}>
                             <Text style={{}}>{this.state.rank && this.state.rank.nazev}</Text>
-                            {this.state.rank.pary.map((couple: Pary) => {
-                                return <Card transparent noShadow key={couple.id}>
+                            {this.state.rank.pary.map((couple: Pary, index: number) => {
+                                return (<><Card transparent noShadow key={couple.id}>
                                     <View style={styles.eventBox}>
                                         <View style={styles.eventDate}>
                                             <Text style={styles.eventDay}>{couple.poradi_od}</Text>
@@ -123,6 +128,12 @@ class RanklistScreen extends React.Component<RanklistScreenProps, RanklistScreen
                                         </View>
                                     </View>
                                 </Card>
+                                {index > 0 && index % 3 == 0 && <AdMobBanner
+
+bannerSize="smartBannerPortrait"
+adUnitID="ca-app-pub-1900213351962804/6193625682"
+testDeviceID="EMULATOR" />}    
+                                </>)
                             })}
                         </ScrollView>
                     </View >

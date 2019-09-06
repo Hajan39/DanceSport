@@ -19,6 +19,7 @@ import { getCstsScreens, getWdsfScreens } from './CompetitionNavigator';
 import SlideShowNavigator from './SlideshowNavigator';
 import { ComponentBase } from 'resub';
 import UserStore from '../strores/UserStore';
+import AboutScreen from '../screens/AboutScreen';
 
 const homeScreenStack = createStackNavigator(
     {
@@ -34,6 +35,25 @@ const homeScreenStack = createStackNavigator(
                 <TabBarIcon
                     focused={focused}
                     name="newspaper-o"
+                />
+            ),
+        }),
+    }
+);
+const aboutScreenStack = createStackNavigator(
+    {
+        About: AboutScreen
+    },
+    {
+        navigationOptions: ({ navigation }) => ({
+            showLabel: false,
+            initialRouteName: 'About',
+            headerMode: 'none',
+            drawerLabel: "O aplikaci",
+            drawerIcon: ({ focused }) => (
+                <TabBarIcon
+                    focused={focused}
+                    name="info"
                 />
             ),
         }),
@@ -92,7 +112,10 @@ class CustomTabsNavigator extends ComponentBase<{}, NavigationState> {
             name: "WDSFBottomTab",
             screen: getWdsfScreens(data.wdsf)
         }
-
+        screens.About = {
+            name: 'aboutScreenStack',
+            screen: aboutScreenStack
+        }
         screens.settings = {
             name: "settingsScreenStack",
             screen: settingsScreenStack

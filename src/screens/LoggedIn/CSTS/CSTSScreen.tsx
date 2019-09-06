@@ -41,7 +41,6 @@ class CSTSScreen extends ComponentBase<CSTSScreenProps, CSTSScreenState> {
 
     static navigationOptions = ({ navigation }: NavigationScreenProps) => {
         const { params } = navigation.state;
-        console.log("like", params, params.likeIt);
         
         return {
             headerLeft: <Button transparent><Icon name="menu" style={{ color: "black" }}
