@@ -1,37 +1,24 @@
 import * as React from 'react';
 import {
-    createAppContainer, createStackNavigator,
-    createBottomTabNavigator,
-    createSwitchNavigator,
+    createAppContainer,
     NavigationRouteConfigMap,
     NavigationNavigator,
-    BottomTabNavigatorConfig,
-    createDrawerNavigator,
-    DrawerNavigatorConfig
 } from 'react-navigation';
-import { MultiBar, MultiBarToggle } from 'react-native-multibar';
-
-import CompetitionScreen from '../screens/CompetitionScreen';
+import { createStackNavigator, } from 'react-navigation-stack';
+import { createDrawerNavigator } from 'react-navigation-drawer';
 import HomeScreen from '../screens/HomeScreen';
-import RanklistScreen from '../screens/RanklistScreen';
 import TabBarIcon from '../components/TabBarIcon';
-import LoginScreen from '../screens/Login/LoginScreen';
-import RegisterScreen from '../screens/Login/RegisterScreen';
-import LoadingScreen from '../screens/Login/LoadingScreen';
-import { Component } from 'react';
-import FirebaseWorker from '../objects/FirebaseWorker';
-import firebase from 'firebase';
 import SettingsScreen from '../screens/SettingsScreen';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import WDSFScreen from '../screens/Profiles/WDSFScreen';
-import CSTSScreen from '../screens/Profiles/CSTSScreen';
-import { Text, Image } from 'react-native';
-import CSTSSettingsSceen from '../screens/Settings/CSTSSettingsScreen';
-import WDSFSettingsSceen from '../screens/Settings/WDSFSettingsScreen';
-import ForgotPasswordScreen from '../screens/Login/ForgotPasswordScreen';
-import CustomIcon from '../CustomIcon';
+import CSTSSettingsSceen from '../screens/LoggedIn/CSTS/CSTSSettingsScreen';
+import WDSFSettingsSceen from '../screens/LoggedIn/WDSF/WDSFSettingsScreen';
 import Colors from '../constants/Colors';
-
+import SideMenu from './SideMenu';
+import { User } from '../objects/firebaseUser';
+import LoginNavigator from './LoginNavigator';
+import { getCstsScreens, getWdsfScreens } from './CompetitionNavigator';
+import SlideShowNavigator from './SlideshowNavigator';
+import { ComponentBase } from 'resub';
+import UserStore from '../strores/UserStore';
 
 const homeScreenStack = createStackNavigator(
     {
@@ -53,93 +40,6 @@ const homeScreenStack = createStackNavigator(
     }
 );
 
-const ranklistScreenStack = createStackNavigator(
-    {
-        Ranklist: RanklistScreen
-    },
-    {
-        navigationOptions: ({ navigation }) => ({
-            initialRouteName: 'Ranklist',
-            showLabel: false,
-            tabBarLabel: "Ranklist",
-            headerMode: "none",
-            tabBarIcon: ({ focused }) => (
-                <TabBarIcon
-                    focused={focused}
-                    name="list-ol"
-                />
-            ),
-        }),
-    }
-);
-const wdsfCompetitionScreenStack = createStackNavigator(
-    {
-        Competition: CompetitionScreen
-    }, {
-        navigationOptions: ({ navigation }) => ({
-            initialRouteName: 'Competition',
-            headerMode: "none",
-            showLabel: false,
-            tabBarLabel: "Soutěže",
-            tabBarIcon: ({ focused }) => (
-                <TabBarIcon
-                    focused={focused}
-                    name="trophy"
-                />
-            ),
-        })
-
-    });
-
-
-
-const wdsfScreenStack = createStackNavigator(
-    {
-        Wdsf: WDSFScreen
-    }, {
-        navigationOptions: ({ navigation }) => ({
-            initialRouteName: 'Wdsf',
-            headerMode: "none",
-            showLabel: false,
-            tabBarLabel: "WDSF",
-            tabBarIcon: ({ focused }) => (
-                <CustomIcon name="wdsf" size={20} />
-            ),
-        })
-
-    });
-
-const drawerBarSettings: DrawerNavigatorConfig = {
-    initialRouteName: "home",
-}
-const bottomBarSettings: BottomTabNavigatorConfig = {
-    initialRouteName: "home",
-    tabBarOptions: {
-        showLabel: false,
-        activeTintColor: '#F8F8F8',
-        inactiveTintColor: '#586589',
-        style: {
-            backgroundColor: '#171F33'
-        },
-        tabStyle: {}
-    }
-};
-
-const cstsScreenStack = createStackNavigator(
-    {
-        Csts: CSTSScreen
-    }, {
-        navigationOptions: ({ navigation }) => ({
-            initialRouteName: 'Csts',
-            headerMode: "none",
-            showLabel: false,
-            tabBarLabel: "Profil",
-            tabBarIcon: ({ focused }) => (
-                <TabBarIcon focused={focused} name="user" />
-            ),
-        })
-
-    });
 const settingsScreenStack = createStackNavigator(
     {
         Settings: SettingsScreen,
@@ -150,127 +50,60 @@ const settingsScreenStack = createStackNavigator(
             initialRouteName: 'Settings',
             headerMode: "none",
             showLabel: false,
-            drawerLabel: "Nastavení",
-            drawerIcon: ({ focused }) => (
-                <TabBarIcon
-                    focused={focused}
-                    name="cog"
-                />
-            ),
         })
 
     });
 
 
 export interface NavigationState {
-    Navigation: NavigationNavigator<any, any, any>
+    Navigation: NavigationNavigator<any, any, any>,
 }
 
-class CustomTabsNavigator extends Component<{}, NavigationState> {
-    constructor(props: Readonly<{}>) {
-        super(props);
-        this.state = {
-            Navigation: createSwitchNavigator({
-                loading: LoadingScreen,
-                login: LoginScreen,
-                register: RegisterScreen,
-                //forgotPassordScreen: ForgotPasswordScreen,
-            })
-        }
+class CustomTabsNavigator extends ComponentBase<{}, NavigationState> {
+    protected _buildState(props: {}, initialBuild: boolean): NavigationState {
+        var settings = UserStore.getRouterSettings();
+       
+            return {
+                Navigation: settings ? this.getNavigation(settings) : LoginNavigator,
+            }
+        
+       
     }
 
-    componentDidMount() {
-        firebase.auth().onAuthStateChanged(async (user) => {
-            if (user && user) {
-                var data = await FirebaseWorker.getUserData(user);
+    getNavigation(data: {firstLoad: boolean, csts: boolean, wdsf: boolean}) {
+        const screens: NavigationRouteConfigMap = {};
 
-                const screens: NavigationRouteConfigMap = {
-                    home: {
-                        name: 'HomeScreenStack',
-                        screen: homeScreenStack
-                    }
+        if (data.firstLoad)
+            screens.init = {
+                name: "init",
+                screen: SlideShowNavigator,
 
-                };
-
-                const cstsScreens: NavigationRouteConfigMap = {
-                    ranklist: {
-                        name: "RanklistScreenStack",
-                        screen: ranklistScreenStack
-                    },
-
-                }
-                const wdsfScreens: NavigationRouteConfigMap = {
-                    competiton: {
-                        name: "CompetitionScreenStack",
-                        screen: wdsfCompetitionScreenStack
-                    },
-
-                }
-                if (data.cstsIdt) {
-
-                    cstsScreens.profile = {
-                        name: "CSTSSCreenStack",
-                        screen: cstsScreenStack
-                    }
-
-
-                }
-                if (data.wdsfId) {
-                    wdsfScreens.profile = {
-                        name: "WDSFScreenStack",
-                        screen: wdsfScreenStack
-                    }
-                }
-
-                screens.CSTS = {
-                    name: "CSTSBottomTab",
-                    screen: createBottomTabNavigator(cstsScreens,
-                        {
-                            navigationOptions: ({ navigation }) => ({
-                                initialRouteName: 'Csts',
-                                headerMode: "none",
-                                showLabel: false,
-                                drawerLabel: "ČSTS",
-                                drawerIcon: ({ focused }) => (
-                                    <CustomIcon name="csts" size={20} />
-                                ),
-                            })
-                        })
-                }
-                screens.WDSF = {
-                    name: "WDSFBottomTab",
-                    screen: createBottomTabNavigator(wdsfScreens,
-                        {
-                            navigationOptions: ({ navigation }) => ({
-                                initialRouteName: 'Wdsf',
-                                headerMode: "none",
-                                showLabel: false,
-                                drawerLabel: "WDSF",
-                                drawerIcon: ({ focused }) => (
-                                    <CustomIcon name="wdsf" size={20} />
-                                ),
-                            })
-                        })
-                }
-
-                screens.settings = {
-                    name: "settingsScreenStack",
-                    screen: settingsScreenStack
-                }
-                this.setState({ Navigation: createDrawerNavigator(screens, drawerBarSettings) })
             }
-            else {
-                this.setState({
-                    Navigation: createSwitchNavigator({
-                        loading: LoadingScreen,
-                        login: LoginScreen,
-                        register: RegisterScreen,
-                        // forgotPassordScreen: ForgotPasswordScreen,
-                    })
-                });
-            }
-        })
-    };
+
+        screens.home = {
+            name: 'HomeScreenStack',
+            screen: homeScreenStack
+        }
+        screens.CSTS = {
+            name: "CSTSBottomTab",
+            screen: getCstsScreens(data.csts)
+        }
+        screens.WDSF = {
+            name: "WDSFBottomTab",
+            screen: getWdsfScreens(data.wdsf)
+        }
+
+        screens.settings = {
+            name: "settingsScreenStack",
+            screen: settingsScreenStack
+        }
+
+        return createDrawerNavigator(screens, {
+            contentComponent: (navigator) =>
+                <SideMenu activeLabelStyle={{ backgroundColor: Colors.header }} {...navigator} updateImage={(url: string) => this.updateImage(url)} />,
+            drawerWidth: 300
+        });
+    }
 
     render() {
         const { props } = this;

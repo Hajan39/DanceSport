@@ -24,7 +24,7 @@ function getDancerProfile(min: string | number, newData: boolean = false): Promi
 
 
 async function getCachedUrlContent<T>(urlAsKey: string, newData: boolean): Promise<T> {
-    /*if (newData) {
+    if (newData) {
         await AsyncStorage.getItem(urlAsKey, async (err, value) => {
             if (value) {
                 let data: T = (JSON.parse(value));
@@ -38,12 +38,12 @@ async function getCachedUrlContent<T>(urlAsKey: string, newData: boolean): Promi
                 }
             }
         });
-    }*/
+    }
     return await GetNewDataFromServer<T>(urlAsKey);
 };
 
 async function GetNewDataFromServer<T>(urlAsKey: string): Promise<T> {
-    var apiRes: T = await fetch(urlAsKey, {
+    let apiRes: T = await fetch(urlAsKey, {
         method: 'GET',
         headers: new Headers({
             'Authorization': 'Basic aGFqYW4zOTpBbWQzNjk2Mw==',
@@ -53,7 +53,7 @@ async function GetNewDataFromServer<T>(urlAsKey: string): Promise<T> {
     }).then((response) => {
         return response.json();
     }).catch(x => {
-        console.log("ERROR", x)
+        console.log('ERROR', x)
     });
     apiRes.expireAt = getExpireDate().toDateString();
     const objectToStore = JSON.stringify(apiRes);
@@ -63,14 +63,14 @@ async function GetNewDataFromServer<T>(urlAsKey: string): Promise<T> {
 
 function getExpireDate(): Date {
     const now = new Date();
-    let expireTime = new Date(now);
+    const expireTime = new Date(now);
     expireTime.setMinutes(now.getMinutes() + 1440);
     return expireTime;
 }
 
 const WDSF = {
     getDancerProfile,
-    getDancerAllData
-}
+    getDancerAllData,
+};
 
 export default WDSF;

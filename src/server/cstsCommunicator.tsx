@@ -1,10 +1,10 @@
-import { Profile, CompData, Partner, DancerData, CompResults } from "../objects/profileData";
+import { Profile, CompData, Partner, CstsDancerData, CompResults } from "../objects/profileData";
 import { Ranklist } from "../objects/ranklistData";
 import { AsyncStorage } from "react-native";
 
 const cstsUrl: string = "http://www.csts.cz/";
 
-async function getDancerAllData(idt: string | number): Promise<DancerData> {
+async function getDancerAllData(idt: string | number): Promise<CstsDancerData> {
     var profile: Profile = await getDancerProfile(idt);
     var competition = getDancerCompetitionData(profile.Id);
     var partner = getDancerPartner(profile.Id)

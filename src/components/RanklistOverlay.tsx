@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Overlay } from 'react-native-elements';
-import { View, ListItem, Text, Picker, Button } from 'native-base';
+import { View, ListItem, Picker, Button } from 'native-base';
 import { SeznamDivizi, Seznam, Selection } from '../objects/ranklistData';
+import { Text } from 'react-native';
 
 export interface RanklistOverlayProps {
     selection: Selection | null

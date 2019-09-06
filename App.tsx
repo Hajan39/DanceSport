@@ -1,5 +1,5 @@
 import NavigationScreens from './src/navigators/MainNavigator';
-import { Font } from 'expo';
+import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { Root } from "native-base";
 import LoadingPage from './src/objects/loadingPage';
@@ -26,9 +26,8 @@ export default class App extends Component<{}, { fontLoaded: boolean }> {
   async componentDidMount() {
 
     await Font.loadAsync({
-      'Roboto': require('native-base/Fonts/Roboto.ttf'),
-      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
-      'fontello': require('./assets/fonts/fontello.ttf'),
+     
+      fontello: require('./assets/fonts/fontello.ttf'),
       ...Ionicons.font,
     });
     this.setState({ fontLoaded: true })

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
-import { Image } from "react-native-elements";
+import { View, Text, StyleSheet, Image } from "react-native";
 
 function GetLoadingImage() {
     var index = Math.floor(Math.random() * 3) + 1;
@@ -21,7 +20,14 @@ const LoadingPage = (text: string) => {
     return (
         <View style={styles.container}>
             <Text>{text}</Text>
-            <Image source={GetLoadingImage()} resizeMode="contain" style={{ maxHeight: "80%", maxWidth: '100%' }}></Image>
+            <Image
+                source={GetLoadingImage()}
+                resizeMode="contain"
+                style={{
+                    maxHeight: "80%",
+                    maxWidth: '100%'
+                }}>
+            </Image>
         </View>
     )
 }

@@ -8,32 +8,30 @@ import { ScrollView, Platform } from 'react-native';
 import { User } from '../objects/firebaseUser';
 import { NavigationScreenProps } from 'react-navigation';
 import CustomIcon from '../CustomIcon';
+import { ComponentBase } from 'resub';
+import UserStore from '../strores/UserStore';
 
 export interface SettingsScreenProps extends NavigationScreenProps {
 
 }
 
 export interface SettingsScreenState {
-    user: User
+    user: User|undefined
 }
 
-class SettingsScreen extends React.Component<SettingsScreenProps, SettingsScreenState> {
-    constructor(props: SettingsScreenProps) {
-        super(props);
+class SettingsScreen extends ComponentBase<SettingsScreenProps, SettingsScreenState> {
+     protected _buildState(props: SettingsScreenProps, initialBuild: boolean): SettingsScreenState {
+        return {
+            user: UserStore.getUser()
+        }
     }
     static navigationOptions = ({ navigation }: NavigationScreenProps) => {
         return {
+            headerLeft: <Button transparent><Icon name="menu" style={{color: "black"}}
+        onPress={ () => navigation.openDrawer() } /></Button>,
             title: 'Nastavení',
         }
     };
-    componentDidMount() {
-        var curr = firebase.auth().currentUser;
-        if (curr) {
-            FirebaseWorker.getUserData(curr).then(user => {
-                this.setState({ user });
-            })
-        }
-    }
 
     render() {
         return (<Container>

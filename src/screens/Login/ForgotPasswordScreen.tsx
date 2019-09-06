@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Component } from 'react';
 import LoadingPage from '../../objects/loadingPage';
-import { KeyboardAvoidingView, TouchableOpacity } from 'react-native';
+import { KeyboardAvoidingView, TouchableOpacity, Alert } from 'react-native';
 import { View, List, ListItem, Text, Button } from 'native-base';
 import { Image, Divider } from 'react-native-elements';
 import { TextInput } from 'react-native-gesture-handler';
 import Colors from '../../constants/Colors';
 import { NavigationScreenProps } from 'react-navigation';
+import FirebaseWorker from '../../objects/FirebaseWorker';
 
 export interface ForgotPasswordScreenProps extends NavigationScreenProps {
 
@@ -58,7 +59,9 @@ class ForgotPasswordScreen extends React.Component<ForgotPasswordScreenProps, Fo
         </KeyboardAvoidingView>);
     }
     onSendPass(): void {
-
+        FirebaseWorker.resetPass(this.state.email);
+        Alert.alert("Obnoveni bylo odeslano na Vas email");
+        this.props.navigation.navigate("login");
     }
 }
 

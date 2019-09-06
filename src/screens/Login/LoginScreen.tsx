@@ -1,4 +1,4 @@
-import { Button, List, ListItem } from 'native-base';
+import { Button, List, ListItem, Icon } from 'native-base';
 import * as React from 'react';
 import { Image, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Divider } from 'react-native-elements';
@@ -31,6 +31,11 @@ class LoginScreen extends React.Component<LoginScreenProps, LoginScreenState> {
     componentDidMount() {
         this.setState({ loading: false });
     }
+
+    onLoginOrRegister = () => {
+        FirebaseWorker.loginGoogleUser();
+    }
+    
     onVerifyUser = async () => {
         const { email, password } = this.state;
         if (email.length > 0 && password.length > 0) {
@@ -68,14 +73,19 @@ class LoginScreen extends React.Component<LoginScreenProps, LoginScreenState> {
                     }}>
                         <Text>Přihlásit se</Text>
                     </Button>
-                    {/* <Button transparent block >
+                    <Button block icon iconLeft info style={{ width: '80%', alignSelf: "center", borderRadius: 5, marginTop: 10 }} onPress={() => this.onLoginOrRegister()}>
+                                <Icon type="FontAwesome" name='google' />
+                                <Text>Přihlásit se přes google</Text>
+                            </Button>
+                    <Button transparent block onPress={() => this.props.navigation.navigate("forgotPassword")} >
                         <Text>Zapomenuté heslo</Text>
-                    </Button> */}
+                    </Button>
                 </View>
                 <View style={{ flexDirection: "row", alignContent: "center", justifyContent: "space-evenly", paddingTop: 25 }}><Text>Nemáte účet?</Text>
                     <TouchableOpacity onPress={() => this.props.navigation.navigate("register")}>
                         <Text style={{ color: Colors.blue }}>Zaregistrujte se.</Text>
                     </TouchableOpacity>
+
                 </View>
             </View>
         </KeyboardAvoidingView>);

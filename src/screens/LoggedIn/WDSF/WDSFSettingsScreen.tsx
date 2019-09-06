@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { Container, Content, Item, Input, Header, Icon, Button, Text } from 'native-base';
 import { NavigationScreenProps } from 'react-navigation';
-import WDSF from '../../server/wdsfCommunicator';
-import { WdsfProfile } from '../../objects/wdsfData';
+import WDSF from '../../../server/wdsfCommunicator';
 import _ from 'lodash';
-import BackgroundImage from '../../components/BackgroundImage';
-import FirebaseWorker from '../../objects/FirebaseWorker';
-import { User } from '../../objects/firebaseUser';
+import BackgroundImage from '../../../components/BackgroundImage';
+import FirebaseWorker from '../../../objects/FirebaseWorker';
 import { Alert } from 'react-native';
+import { User } from 'firebase';
+import { WdsfProfile } from '../../../objects/wdsfData';
+import { Item, Input, Button, Icon } from 'native-base';
 
 export interface WDSFSettingsSceenProps extends NavigationScreenProps {
 
@@ -59,7 +59,7 @@ class WDSFSettingsSceen extends React.Component<WDSFSettingsSceenProps, WDSFSett
             'Jste si jisti?',
             'Jméno ' + name + ' nesouhlasí se jménem ' + this.state.user.name + ". Jste to opravdu vy?",
             [
-                { text: 'NE', onPress: () => console.log('Ask me later pressed') },
+                { text: 'NE' },
                 { text: 'ANO', onPress: () => FirebaseWorker.updateWDSFProfile(profile) },
             ],
             { cancelable: false },

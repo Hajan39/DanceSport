@@ -9,6 +9,7 @@ const shineRed = "#ff0000";
 const shineGreen = "#00ff00";
 const shineBlue = "#0000ff"
 const darkGrey = "#8e8e93";
+const transparent = "rgba(0,0,0,0)"
 
 export default {
   tabIconDefault: darkGrey,
@@ -21,6 +22,7 @@ export default {
   customerDefault: shineGreen,
   blue,
   grey,
+  transparent,
   black,
   header,
   white,

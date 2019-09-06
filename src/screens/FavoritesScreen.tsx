@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { Component } from 'react';
 import { User } from '../objects/firebaseUser';
 import BackgroundImage from '../components/BackgroundImage';
-import { List, ListItem, Icon, View } from 'native-base';
+import { List, ListItem, Icon, Button } from 'native-base';
 import { NavigationScreenProps } from 'react-navigation';
 import { Text, ActivityIndicator } from 'react-native';
 import CSTSListItem from '../components/CSTSListItem';
@@ -29,6 +28,8 @@ class FavoritesScreen extends React.Component<FavoritesScreenProps, FavoritesScr
         const { params } = navigation.state;
         return {
             title: 'Ranklist',
+            headerLeft: <Button transparent><Icon name="menu" style={{color: "black"}}
+        onPress={ () => navigation.openDrawer() } /></Button>,
             headerRight: (
                 <Icon
                     style={{ paddingRight: 20 }}

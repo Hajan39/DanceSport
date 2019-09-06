@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Card, CardItem, Left, Text, Body, Separator } from 'native-base';
-import { Profile, DancerData } from '../../objects/profileData';
+import { Profile, CstsDancerData } from '../../objects/profileData';
 import { ScrollView } from 'react-native';
 import BackgroundImage from '../BackgroundImage';
 
 export interface InfrormationTabProps {
-    profile: DancerData
+    profile: CstsDancerData
 }
 
 export interface InfrormationTabState {
@@ -27,6 +27,14 @@ class InfrormationTab extends React.Component<InfrormationTabProps, Infrormation
         return (<ScrollView style={{ backgroundColor: "transparent" }}>
             <BackgroundImage>
                 <Card transparent style={{ backgroundColor: "transparent" }}>
+                <CardItem style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}>
+                        <Left>
+                            <Text>IDT</Text>
+                        </Left>
+                        <Body>
+                            <Text>{profile.IdtClena}</Text>
+                        </Body>
+                    </CardItem>
                     <CardItem style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}>
                         <Left>
                             <Text>Věková kategorie</Text>

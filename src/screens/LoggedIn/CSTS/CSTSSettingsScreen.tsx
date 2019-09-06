@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Item, Input, Icon, Button } from 'native-base';
 import { NavigationScreenProps } from 'react-navigation';
-import { Profile } from '../../objects/profileData';
 import _ from 'lodash';
-import CSTS from '../../server/cstsCommunicator';
-import BackgroundImage from '../../components/BackgroundImage';
-import FirebaseWorker from '../../objects/FirebaseWorker';
-import { User } from '../../objects/firebaseUser';
+import CSTS from '../../../server/cstsCommunicator';
+import BackgroundImage from '../../../components/BackgroundImage';
+import FirebaseWorker from '../../../objects/FirebaseWorker';
+import { User } from '../../../objects/firebaseUser';
 import { Alert } from 'react-native';
+import { Profile } from '../../../objects/profileData';
 
 export interface CSTSSettingsSceenProps extends NavigationScreenProps {
 
@@ -57,7 +57,7 @@ class CSTSSettingsSceen extends React.Component<CSTSSettingsSceenProps, CSTSSett
             'Jste si jisti?',
             'Jméno ' + name + ' nesouhlasí se jménem ' + this.state.user.name + ". Jste to opravdu vy?",
             [
-                { text: 'NE', onPress: () => console.log('Ask me later pressed') },
+                { text: 'NE'},
                 { text: 'ANO', onPress: () => FirebaseWorker.updateCSTSProfile(profile) },
             ],
             { cancelable: false },
