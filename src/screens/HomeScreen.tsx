@@ -53,7 +53,15 @@ class HomeScreen extends ComponentBase<HomeScreenProps, HomeScreenState> {
                 <ScrollView  >
                     <View style={{ flex: 1, alignItems: "center", paddingBottom: 50, height: Layout.window.height }}>
                     
-<Text>hi</Text>{this.state.user && <Text >{this.state.user.firebaseId}</Text>}
+                    <Card style={{ width: '90%' }}>
+                            <CardItem cardBody>
+                                <Image source={require("../../assets/logo.png")} />
+                            </CardItem> 
+                            <CardItem>
+                                <Text>{"Vítejte v nové aplikaci pro lidi co milují tanec. Aplikace je určena pro všchnz, kteří mlují tanec a případně jsou i registrovaními členy jednoho z podporovaných spolků. Není-li Váš taneční spolek ještě mezi nimi? Ozvěte se nám a my se pokusíme je přidat."}</Text>
+                            </CardItem>
+                           
+                        </Card>
                         {this.state.data&&
                          this.state.data.data.map(x=> {
                             return <Card style={{ width: '90%' }}>
