@@ -11,6 +11,7 @@ import { NavigationRouteConfigMap } from "react-navigation";
 import { createBottomTabNavigator} from 'react-navigation-tabs';
 import FavoritesWdsfScreen from '../screens/LoggedIn/WDSF/FavoritesWdsfScreen';
 import FavoritesCstsScreen from '../screens/LoggedIn/CSTS/FavoritesCstsScreen';
+import CompetitionDetailScreen from '../screens/LoggedIn/WDSF/CompetitionDetailScreen';
 
 
 export function getCstsScreens (cstsId: boolean) {
@@ -75,6 +76,10 @@ export function getWdsfScreens(wdsfId:boolean) {
                 drawerIcon: ({ focused }) => (
                     <CustomIcon name="wdsf" size={20} />
                 ),
+                headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
             })
         });
 }
@@ -101,10 +106,10 @@ export const cstsScreenStack = createStackNavigator(
             Csts: CSTSScreen
         }, {
             navigationOptions: ({ navigation }) => ({
-                initialRouteName: 'Oblibene',
+                initialRouteName: 'Oblíbené',
                 headerMode: "none",
                 showLabel: false,
-                tabBarLabel: "Oblibene",
+                tabBarLabel: "Oblíbené",
                 tabBarIcon: ({ focused }) => (
                     <TabBarIcon
                         focused={focused}
@@ -141,10 +146,10 @@ const WDSFFavoritesScreenStack = createStackNavigator(
         Favorites: FavoritesWdsfScreen
     }, {
         navigationOptions: ({ navigation }) => ({
-            initialRouteName: 'Oblibene',
+            initialRouteName: 'Oblíbené',
             headerMode: "none",
             showLabel: false,
-            tabBarLabel: "Oblibene",
+            tabBarLabel: "Oblíbené",
             tabBarIcon: ({ focused }) => (
                 <TabBarIcon
                     focused={focused}
@@ -157,7 +162,8 @@ const WDSFFavoritesScreenStack = createStackNavigator(
 
 const wdsfCompetitionScreenStack = createStackNavigator(
         {
-            Competition: CompetitionScreen
+            Competition: CompetitionScreen,
+            WdsfCompDetail: CompetitionDetailScreen
         }, {
             navigationOptions: ({ navigation }) => ({
                 initialRouteName: 'Competition',

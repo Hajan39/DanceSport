@@ -29,9 +29,16 @@ class AboutScreen extends ComponentBase<AboutScreenProps, AboutScreenState> {
     static navigationOptions = ({ navigation }: AboutScreenProps) => {
         const { params } = navigation.state;
         return {
-            headerLeft: <Button transparent><Icon name="menu" style={{ color: "black" }}
+            headerLeft: <Button transparent><Icon name="menu" style={{ color: Colors.iconColor }}
                 onPress={() => navigation.openDrawer()} /></Button>,
             title: 'O aplikaci',
+            headerStyle: {
+                backgroundColor: Colors.header,
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
         }
     };
 
@@ -40,13 +47,13 @@ render(){
     return (
         <SafeAreaView style={styles.container}>
             <Tabs renderTabBar={()=> <ScrollableTab style={{ backgroundColor: "transparent" }} backgroundColor="transparent" tabsContainerStyle={{ backgroundColor: "transparent" }} />} style={{ backgroundColor: "transparent" }} >
-                <Tab heading="O aplkaci" tabStyle={{ backgroundColor: 'transparent' }} textStyle={{ color: '#000' }} activeTabStyle={{ backgroundColor: 'transparent' }} activeTextStyle={{ color: Colors.blue, fontWeight: '700', textDecorationLine: "underline", textDecorationStyle: "solid" }}>
+                <Tab heading="O aplkaci" tabStyle={{ backgroundColor: 'transparent' }} textStyle={{ color: '#000' }} activeTabStyle={{ backgroundColor: 'transparent' }} activeTextStyle={{ color: Colors.header, fontWeight: '700', textDecorationLine: "underline", textDecorationStyle: "solid" }}>
                     <AboutTab />
                 </Tab>
-                <Tab heading="Kontakt"  tabStyle={{ backgroundColor: 'transparent' }} textStyle={{ color: '#000' }} activeTabStyle={{ backgroundColor: 'transparent' }} activeTextStyle={{ color: Colors.blue, fontWeight: '700', textDecorationLine: "underline", textDecorationStyle: "solid" }}>
+                <Tab heading="Kontakt"  tabStyle={{ backgroundColor: 'transparent' }} textStyle={{ color: '#000' }} activeTabStyle={{ backgroundColor: 'transparent' }} activeTextStyle={{ color: Colors.header, fontWeight: '700', textDecorationLine: "underline", textDecorationStyle: "solid" }}>
                     <ContactTab />
                 </Tab>
-                <Tab heading="Podpora" tabStyle={{ backgroundColor: 'transparent' }} textStyle={{ color: '#000' }} activeTabStyle={{ backgroundColor: 'transparent' }} activeTextStyle={{ color: Colors.blue, fontWeight: '700', textDecorationLine: "underline", textDecorationStyle: "solid" }}>
+                <Tab heading="Podpora" tabStyle={{ backgroundColor: 'transparent' }} textStyle={{ color: '#000' }} activeTabStyle={{ backgroundColor: 'transparent' }} activeTextStyle={{ color: Colors.header, fontWeight: '700', textDecorationLine: "underline", textDecorationStyle: "solid" }}>
                     <SupportTab user={this.state.user} />
                 </Tab>
             </Tabs>

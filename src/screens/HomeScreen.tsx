@@ -16,6 +16,7 @@ import {
     PublisherBanner,
     AdMobRewarded
 } from 'expo-ads-admob';
+import Colors from '../constants/Colors';
 export interface HomeScreenProps extends NavigationScreenProps {
 
 }
@@ -52,9 +53,16 @@ class HomeScreen extends ComponentBase<HomeScreenProps, HomeScreenState> {
     static navigationOptions = ({ navigation }: NavigationScreenProps) => {
         const { params } = navigation.state;
         return {
-            headerLeft: <Button transparent><Icon name="menu" style={{ color: "black" }}
+            headerLeft: <Button transparent><Icon name="menu" style={{ color: Colors.iconColor }}
                 onPress={() => navigation.openDrawer()} /></Button>,
             title: 'Novinky',
+            headerStyle: {
+                backgroundColor: Colors.header,
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
         }
     };
     render() {

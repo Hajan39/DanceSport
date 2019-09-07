@@ -34,3 +34,30 @@ export interface WdsfDancerData {
     profile: WdsfProfile,
     partner: WdsfProfile | undefined
 }
+
+
+export interface WdsfCompetitionGlobal {
+  link: Link[];
+  id: number;
+  name: string;
+  lastmodifiedDate: string;
+}
+
+
+export interface WdsfCompetitionDetail {
+  link: Link[];
+  id: number;
+  location: string;
+  country: string;
+  type: string;
+  date: string;
+  age: string;
+  discipline: string;
+  danceform: string;
+  division: string;
+  status: string;
+  coefficient: number;
+  lastmodifiedDate: string;
+  eventId: number;
+  groupId: number;
+}

@@ -10,6 +10,7 @@ import { NavigationScreenProps } from 'react-navigation';
 import CustomIcon from '../CustomIcon';
 import { ComponentBase } from 'resub';
 import UserStore from '../strores/UserStore';
+import Colors from '../constants/Colors';
 
 export interface SettingsScreenProps extends NavigationScreenProps {
 
@@ -27,9 +28,17 @@ class SettingsScreen extends ComponentBase<SettingsScreenProps, SettingsScreenSt
     }
     static navigationOptions = ({ navigation }: NavigationScreenProps) => {
         return {
-            headerLeft: <Button transparent><Icon name="menu" style={{color: "black"}}
+            headerLeft: <Button transparent><Icon name="menu" style={{color: Colors.iconColor}}
         onPress={ () => navigation.openDrawer() } /></Button>,
             title: 'Nastavení',
+
+            headerStyle: {
+                backgroundColor: Colors.header,
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
         }
     };
 
@@ -55,11 +64,6 @@ class SettingsScreen extends ComponentBase<SettingsScreenProps, SettingsScreenSt
                         <Right>
                             <Icon type="FontAwesome" name="chevron-right" />
                         </Right>
-                    </ListItem>
-                    <ListItem style={{ alignSelf: "flex-end" }} onPress={() => firebase.auth().signOut()}>
-                        <Left><Icon type="FontAwesome" name="sign-out" />
-                            <Body><Text>Odhlásit se</Text></Body>
-                        </Left>
                     </ListItem>
                 </List>
             </ScrollView>

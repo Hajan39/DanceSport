@@ -4,7 +4,7 @@ import {
     View,
     RefreshControl
 } from 'react-native';
-import { Icon, Button, Card, CardItem } from 'native-base'
+import { Icon, Button, Card } from 'native-base'
 import { Pary, Rank, Ranklist, Selection } from '../../../objects/ranklistData';
 import { NavigationScreenProps } from 'react-navigation';
 import CSTS from '../../../server/cstsCommunicator';
@@ -14,10 +14,7 @@ import Colors from '../../../constants/Colors';
 import { showProfile } from '../../../functions/cstsFunction';
 import LoadingPage from '../../../objects/loadingPage';
 import {
-    AdMobBanner,
-    AdMobInterstitial,
-    PublisherBanner,
-    AdMobRewarded
+    AdMobBanner
 } from 'expo-ads-admob';
 export interface RanklistScreenProps extends NavigationScreenProps {
 
@@ -50,19 +47,26 @@ class RanklistScreen extends React.Component<RanklistScreenProps, RanklistScreen
     static navigationOptions = ({ navigation }: NavigationScreenProps) => {
         const { params } = navigation.state;
         return {
-            headerLeft: <Button transparent><Icon name="menu" style={{ color: "black" }} fontSize={25}
+            headerLeft: <Button transparent><Icon name="menu" style={{ color: Colors.iconColor }} fontSize={25}
 
                 onPress={() => navigation.openDrawer()} /></Button>,
             title: 'Ranklist',
             headerRight: (
                 <Icon
-                    style={{ paddingRight: 20 }}
+                    style={{ paddingRight: 20, color: Colors.iconColor }}
                     name="sliders"
                     fontSize={25}
                     color="white"
                     type="FontAwesome"
                     onPress={() => params.viewNewUser()} />
-            )
+            ),
+            headerStyle: {
+                backgroundColor: Colors.header,
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
         }
     };
 
@@ -116,7 +120,7 @@ class RanklistScreen extends React.Component<RanklistScreenProps, RanklistScreen
                         <ScrollView refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={() => this._onRefresh()} />}>
                             <Text style={{}}>{this.state.rank && this.state.rank.nazev}</Text>
                             {this.state.rank.pary.map((couple: Pary, index: number) => {
-                                return (<><Card transparent noShadow key={couple.id}>
+                                return (<View key={couple.id}><Card transparent noShadow >
                                     <View style={styles.eventBox}>
                                         <View style={styles.eventDate}>
                                             <Text style={styles.eventDay}>{couple.poradi_od}</Text>
@@ -128,12 +132,12 @@ class RanklistScreen extends React.Component<RanklistScreenProps, RanklistScreen
                                         </View>
                                     </View>
                                 </Card>
-                                {index > 0 && index % 3 == 0 && <AdMobBanner
+                                    {index > 0 && index % 3 == 0 && <AdMobBanner
 
-bannerSize="smartBannerPortrait"
-adUnitID="ca-app-pub-1900213351962804/6193625682"
-testDeviceID="EMULATOR" />}    
-                                </>)
+                                        bannerSize="smartBannerPortrait"
+                                        adUnitID="ca-app-pub-1900213351962804/6193625682"
+                                        testDeviceID="EMULATOR" />}
+                                </View>)
                             })}
                         </ScrollView>
                     </View >

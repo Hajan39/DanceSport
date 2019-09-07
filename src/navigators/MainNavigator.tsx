@@ -13,7 +13,6 @@ import CSTSSettingsSceen from '../screens/LoggedIn/CSTS/CSTSSettingsScreen';
 import WDSFSettingsSceen from '../screens/LoggedIn/WDSF/WDSFSettingsScreen';
 import Colors from '../constants/Colors';
 import SideMenu from './SideMenu';
-import { User } from '../objects/firebaseUser';
 import LoginNavigator from './LoginNavigator';
 import { getCstsScreens, getWdsfScreens } from './CompetitionNavigator';
 import SlideShowNavigator from './SlideshowNavigator';

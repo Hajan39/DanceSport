@@ -8,6 +8,7 @@ import { Alert } from 'react-native';
 import { User } from 'firebase';
 import { WdsfProfile } from '../../../objects/wdsfData';
 import { Item, Input, Button, Icon } from 'native-base';
+import Colors from '../../../constants/Colors';
 
 export interface WDSFSettingsSceenProps extends NavigationScreenProps {
 
@@ -46,6 +47,13 @@ class WDSFSettingsSceen extends React.Component<WDSFSettingsSceenProps, WDSFSett
                     <Icon type="FontAwesome5" name='user' />
                 </Button>
             ),
+            headerStyle: {
+                backgroundColor: Colors.header,
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
         }
     };
 

@@ -56,9 +56,16 @@ class FavoritesCstsScreen extends ComponentBase<FavoritesCstsScreenProps, Favori
     static navigationOptions = ({ navigation }: NavigationScreenProps) => {
         const { params } = navigation.state;
         return {
-            headerLeft: <Button transparent><Icon name="menu" style={{ color: "black" }}
+            headerLeft: <Button transparent><Icon name="menu" style={{ color: Colors.iconColor }}
                 onPress={() => navigation.openDrawer()} /></Button>,
-            title: 'CSTS - Oblibene',
+            title: 'CSTS - Oblíbené',
+            headerStyle: {
+                backgroundColor: Colors.header,
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
         }
     };
 

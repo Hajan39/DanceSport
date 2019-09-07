@@ -1,6 +1,6 @@
-import { StoreBase, AutoSubscribeStore, autoSubscribe, autoSubscribeWithKey } from 'resub';
-import { WdsfProfile, WdsfDancerData } from '../objects/wdsfData';
-import { Profile, CstsDancerData } from '../objects/profileData';
+import { StoreBase, AutoSubscribeStore, autoSubscribeWithKey } from 'resub';
+import { WdsfDancerData } from '../objects/wdsfData';
+import { CstsDancerData } from '../objects/profileData';
 import { User } from '../objects/firebaseUser';
 import CSTS from '../server/cstsCommunicator';
 import WDSF from '../server/wdsfCommunicator';
@@ -24,6 +24,14 @@ class UserStore extends StoreBase {
 constructor() {
     super();
 }
+    signOut(){
+        this.wdsfProfile = undefined;
+        this.cstsProfile= undefined;
+        this.user = undefined;
+        this.routerSettings= undefined;
+        this.trigger();
+    }
+
     setUser(user: User) {
         if(!this.routerSettings || this.routerSettings.firstLoad !=user.firstLoad || this.routerSettings.csts != !!user.cstsIdt|| this.routerSettings.wdsf != !!user.wdsfId){
             this.routerSettings = {firstLoad: user.firstLoad, csts: !!user.cstsIdt, wdsf: !!user.wdsfId}
@@ -32,8 +40,6 @@ constructor() {
 
         this.user = user;
         this.trigger(TriggerKeys.User);
-
-        
 
         if(user.cstsIdt){
             CSTS.getDancerAllData(user.cstsIdt).then(x=> {

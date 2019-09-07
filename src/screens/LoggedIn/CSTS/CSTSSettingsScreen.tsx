@@ -8,6 +8,7 @@ import FirebaseWorker from '../../../objects/FirebaseWorker';
 import { User } from '../../../objects/firebaseUser';
 import { Alert } from 'react-native';
 import { Profile } from '../../../objects/profileData';
+import Colors from '../../../constants/Colors';
 
 export interface CSTSSettingsSceenProps extends NavigationScreenProps {
 
@@ -45,6 +46,13 @@ class CSTSSettingsSceen extends React.Component<CSTSSettingsSceenProps, CSTSSett
                     <Icon type="FontAwesome5" name='user' />
                 </Button>
             ),
+            headerStyle: {
+                backgroundColor: Colors.header,
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
         }
     };
 

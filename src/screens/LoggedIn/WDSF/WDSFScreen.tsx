@@ -40,7 +40,7 @@ class WDSFScreen extends ComponentBase<WDSFScreenProps, WDSFScreenState> {
     static navigationOptions = ({ navigation }: NavigationScreenProps) => {
         const { params } = navigation.state;
         return {
-            headerLeft: <Button transparent><Icon name="menu" style={{color: "black"}}color="black"
+            headerLeft: <Button transparent><Icon name="menu" style={{color: Colors.iconColor}}color="black"
             onPress={ () => navigation.openDrawer() } /></Button>,
           title: navigation.state.params && navigation.state.params.name || 'Profil',
             headerStyle: {
@@ -56,7 +56,11 @@ class WDSFScreen extends ComponentBase<WDSFScreenProps, WDSFScreenState> {
                     color="red"
                     type="FontAwesome"
                     onPress={() => params.toggleFavorites()} />
-            )
+            ),
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
         }
     };
 

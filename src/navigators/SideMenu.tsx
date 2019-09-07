@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { NavigationActions, } from 'react-navigation';
-import { ScrollView, StyleSheet, Text, View, ImageBackground, SafeAreaView, StatusBar } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, SafeAreaView, StatusBar } from 'react-native';
 import { User } from '../objects/firebaseUser';
 import { Avatar, Overlay, Divider } from 'react-native-elements';
 import Colors from '../constants/Colors';
@@ -91,7 +91,7 @@ class SideMenu extends ComponentBase<SideMenuProps, SideMenuState> {
                     height={Layout.window.height * 0.9}
                 >
                     <View style={{ justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
-                        <Text>Tento kod ukazte pri vstupu na soutez nebo jine podporovane akce tanecnisho sportu</Text>
+                        <Text>Tento kód ukažte při vstupu na soutěž, nebo jinou podporovanou akci tanečního sportu</Text>
                         <QRCode
                             value={this.state.data.firebaseId}
                             //Setting the value of QRCode
@@ -127,14 +127,14 @@ class SideMenu extends ComponentBase<SideMenuProps, SideMenuState> {
                                 <Text style={styles.name}>{this.state.data.name}</Text>
                                 <Text style={styles.headerText}>{this.state.data.email}</Text>
                             </View>
-                            <Icon
+                            {/* <Icon
                                 style={{ paddingRight: 20, color: Colors.white }}
                                 name="qrcode"
                                 fontSize={25}
                                 color={Colors.white}
 
                                 type="FontAwesome"
-                                onPress={() => this.viewQrCode()} />
+                                onPress={() => this.viewQrCode()} /> */}
                         </View>
 
                     </View>}

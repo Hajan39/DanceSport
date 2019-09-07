@@ -56,9 +56,17 @@ class FavoritesWdsfScreen extends ComponentBase<FavoritesWdsfScreenProps, Favori
     static navigationOptions = ({ navigation }: NavigationScreenProps) => {
         const { params } = navigation.state;
         return {
-        headerLeft: <Button transparent><Icon name="menu" style={{color: "black"}}
+        headerLeft: <Button transparent><Icon name="menu" style={{color: Colors.iconColor}}
         onPress={ () => navigation.openDrawer() } /></Button>,
-        title: 'WDSF - Oblibene',
+        title: 'WDSF - Oblíbené',
+
+        headerStyle: {
+            backgroundColor: Colors.header,
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
     }};
 
     updateSearch = (search: string) => {

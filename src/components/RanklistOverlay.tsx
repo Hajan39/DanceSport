@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { Overlay } from 'react-native-elements';
-import { View, ListItem, Picker, Button } from 'native-base';
+import { View, Card, Picker, Button, Left, Body, Right, ActionSheet, Icon } from 'native-base';
 import { SeznamDivizi, Seznam, Selection } from '../objects/ranklistData';
 import { Text } from 'react-native';
+import Colors from '../constants/Colors';
 
 export interface RanklistOverlayProps {
-    selection: Selection | null
+    selection: Selection
     datum: string | null,
     vekKtg: string | null,
     disciplina: string | null,
@@ -16,6 +17,10 @@ export interface RanklistOverlayProps {
 }
 
 export interface RanklistOverlayState {
+    seznamDatumu: string[],
+    seznamDiscplin: string[],
+    seznamVekovychKategorii: string[],
+    seznamDivizi: string[],
     datum: string | null,
     vekKtg: string | null,
     disciplina: string | null,
@@ -30,7 +35,11 @@ class RanklistOverlay extends React.Component<RanklistOverlayProps, RanklistOver
             datum: props.datum,
             vekKtg: props.vekKtg,
             disciplina: props.disciplina,
-            divize: props.divize
+            divize: props.divize,
+            seznamDatumu: this.props.selection.seznamDatumu.map(x => x.Value),
+            seznamDiscplin: this.props.selection.seznamDisciplin.map(x => x.Value),
+            seznamDivizi:  this.props.selection.seznamDivizi.map(x => x.Value),
+            seznamVekovychKategorii:  this.props.selection.seznamVekovychKategorii.map(x => x.Value),
         }
     }
     render() {
@@ -39,69 +48,75 @@ class RanklistOverlay extends React.Component<RanklistOverlayProps, RanklistOver
             overlayStyle={{ justifyContent: "center", }}
             onBackdropPress={() => this.props.hideOverlay()}
         >
-            <View style={{ justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
-                {this.props.selection &&
-                    <View style={{ width: '100%' }}>
-                        <ListItem style={{ justifyContent: "space-evenly" }}>
-                            <Text style={{ width: '50%' }}>Věková katergorie</Text>
-                            <Picker
-                                selectedValue={this.state.vekKtg || ''}
-                                style={{ width: '50%' }}
-                                onValueChange={(itemValue, itemIndex) => {
-                                    this.setState({
-                                        vekKtg: itemValue
-                                    });
-                                }
-                                }>
-                                {this.props.selection.seznamVekovychKategorii.map((category: Seznam) => {
-                                    return <Picker.Item key={category.Key} label={category.Value} value={category.Key} />
-                                })}
-                            </Picker>
+                    <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "column", flex: 1 }}>
+                        <Button block iconRight transparent style={{ flexDirection: "row", justifyContent: "space-between" }} onPress={() => ActionSheet.show(
+                            {
+                                options: [...this.state.seznamVekovychKategorii, "Zrušit"],
+                                cancelButtonIndex: this.state.seznamVekovychKategorii.length,
+                                title: "Věková katergorie"
+                            },
+                            buttonIndex => {
+                                if(buttonIndex<this.state.seznamVekovychKategorii.length)                                
+                                this.setState({ vekKtg: this.props.selection.seznamVekovychKategorii.find(x => x.Value == this.state.seznamVekovychKategorii[buttonIndex]).Key });
+                            }
+                        )}
+                        >
+                            <Text>Věková katergorie</Text>
+                            <Text>{this.props.selection.seznamVekovychKategorii.find(x => x.Key == this.state.vekKtg).Value || ''}</Text>
+                            <Icon type="FontAwesome" name="chevron-down" />
+                        </Button>
+                        <Button block iconRight transparent style={{ flexDirection: "row", justifyContent: "space-between" }} onPress={() => ActionSheet.show(
+                            {
+                                options: [...this.state.seznamDiscplin, "Zrušit"],
+                                cancelButtonIndex: this.state.seznamDiscplin.length,
+                                title: "Disciplína"
+                            },
+                            buttonIndex => {
+                                if(buttonIndex<this.state.seznamDiscplin.length)                    
+                                this.setState({ disciplina: this.props.selection.seznamDisciplin.find(x => x.Value == this.state.seznamDiscplin[buttonIndex]).Key });
+                            }
+                        )}
+                        >
+                            <Text>Disciplína</Text>
+                            <Text>{this.props.selection.seznamDisciplin.find(x => x.Key == this.state.disciplina).Value || ''}</Text>
+                            <Icon type="FontAwesome" name="chevron-down" />
+                        </Button>
 
-                        </ListItem>
-                        <ListItem style={{ justifyContent: "space-evenly" }}>
-                            <Text style={{ width: '50%' }}>Disciplína</Text>
-                            < Picker
-                                selectedValue={this.state.disciplina || ''}
-                                style={{ height: 50, width: '50%' }}
-                                onValueChange={(itemValue, itemIndex) =>
-                                    this.setState({ disciplina: itemValue })
-                                }>
-                                {this.props.selection.seznamDisciplin.map((category: Seznam) => {
-                                    return <Picker.Item key={category.Key} label={category.Value} value={category.Key} />
-                                })}
-                            </Picker>
-                        </ListItem>
-                        <ListItem style={{ justifyContent: "space-evenly" }}>
-                            <Text style={{ width: '50%' }}>Datum</Text>
-                            < Picker
-                                selectedValue={this.state.datum || ''}
-                                style={{ width: '50%' }}
-                                onValueChange={(itemValue, itemIndex) =>
-                                    this.setState({ datum: itemValue })
-                                }>
-                                {this.props.selection.seznamDatumu.map((category: Seznam) => {
-                                    return <Picker.Item key={category.Key} label={category.Value} value={category.Key} />
-                                })}
-                            </Picker>
-                        </ListItem>
-                        <ListItem style={{ justifyContent: "space-evenly" }}>
-                            <Text style={{ width: '50%' }}>Divize</Text>
-                            < Picker
-                                selectedValue={this.state.divize || ''}
-                                style={{ width: '50%' }}
-                                onValueChange={(itemValue, itemIndex) =>
-                                    this.setState({ divize: itemValue })
-                                }>
-                                {this.props.selection.seznamDivizi.map((category: SeznamDivizi) => {
-                                    return <Picker.Item key={category.Key} label={category.Value} value={category.Key} />
-                                })}
-                            </Picker>
-                        </ListItem>
-                        <Button block onPress={() => this.props.updateResult(this.state)}><Text>Uložit</Text></Button>
+                        <Button block iconRight transparent style={{ flexDirection: "row", justifyContent: "space-between" }} onPress={() => ActionSheet.show(
+                            {
+                                options: [...this.state.seznamDatumu, "Zrušit"],
+                                cancelButtonIndex: this.state.seznamDatumu.length,
+                                title: "Datum"
+                            },
+                            buttonIndex => {
+                                if(buttonIndex<this.state.seznamDatumu.length)                    
+                                this.setState({ datum: this.props.selection.seznamDatumu.find(x => x.Value == this.state.seznamDatumu[buttonIndex]).Key });
+                            }
+                        )}
+                        >
+                            <Text>Datum</Text>
+                            <Text>{this.props.selection.seznamDatumu.find(x => x.Key == this.state.datum).Value || ''}</Text>
+                            <Icon type="FontAwesome" name="chevron-down" />
+                        </Button>
+
+                        <Button block iconRight transparent style={{ flexDirection: "row", justifyContent: "space-between" }} onPress={() => ActionSheet.show(
+                            {
+                                options: [...this.state.seznamDivizi, "Zrušit"],
+                                cancelButtonIndex: this.state.seznamDivizi.length,
+                                title: "Divize"
+                            },
+                            buttonIndex => {
+                                if(buttonIndex<this.state.seznamDivizi.length)                    
+                                this.setState({ divize: this.props.selection.seznamDivizi.find(x => x.Value == this.state.seznamDivizi[buttonIndex]).Key });
+                            }
+                        )}
+                        >
+                            <Text>Divize</Text>
+                            <Text>{this.props.selection.seznamDivizi.find(x => x.Key == this.state.divize).Value || ''}</Text>
+                            <Icon type="FontAwesome" name="chevron-down" />
+                        </Button>
+                        <Button block style={{backgroundColor: Colors.header}} onPress={() => this.props.updateResult(this.state)}><Text style={{color: Colors.white}}>Uložit</Text></Button>
                     </View>
-                }
-            </View>
         </Overlay>);
     }
 }

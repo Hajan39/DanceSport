@@ -2415,11 +2415,6 @@ detect-libc@^1.0.2:
   resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-1.0.3.tgz#fa137c4bd698edf55cd5cd02ac559f91a4c4ba9b"
   integrity sha1-+hN8S9aY7fVc1c0CrFWfkaTEups=
 
-dialog-polyfill@^0.4.7:
-  version "0.4.10"
-  resolved "https://registry.yarnpkg.com/dialog-polyfill/-/dialog-polyfill-0.4.10.tgz#c4ea68a0deed4abb59a6a2a025c548b278cd532e"
-  integrity sha512-j5yGMkP8T00UFgyO+78OxiN5vC5dzRQF3BEio+LhNvDbyfxWBsi3sfPArDm54VloaJwy2hm3erEiDWqHRC8rzw==
-
 diff@^3.2.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/diff/-/diff-3.5.0.tgz#800c0dd1e0a8bfbc95835c202ad220fe317e5a12"
@@ -3006,13 +3001,6 @@ firebase@6.0.2:
     "@firebase/performance" "0.2.2"
     "@firebase/polyfill" "0.3.14"
     "@firebase/storage" "0.2.16"
-
-firebaseui@^4.0.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/firebaseui/-/firebaseui-4.1.0.tgz#ccd5f20291ac724d15d39217868d7291137780a1"
-  integrity sha512-jZrCv9v8+Dj1mE4yAVeXUw1lBqayFYpXfD3cEdXmx2aZxwF1kpMJuCocnsZeXaFkTcFjYRcjjxakIZmjVp58/A==
-  dependencies:
-    dialog-polyfill "^0.4.7"
 
 fontfaceobserver@^2.1.0:
   version "2.1.0"
@@ -5203,11 +5191,6 @@ react-native-maps@*:
   resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.25.0.tgz#81bc51eb50e33811a9e1c345cc48869413ead67d"
   integrity sha512-PFJuW1pt+HnnnN0m0OGk29RSvICFVkK/DScX6cUk0SuCSN2DAHx0y6y57lZyYXcYqU4J4usNpfxgp/ccjASDiw==
 
-react-native-multibar@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/react-native-multibar/-/react-native-multibar-0.0.6.tgz#ac96a3d22ed202a42a0cc1eceb75e94354ec4436"
-  integrity sha512-1QYRfC3qANp80I3wjmBhDG5ku+DwJD+ZZY4Znlc2v+ibqKEatqxDXUdPVE0JptviXzXSjPZc1n8i5ieMaBXP5g==
-
 react-native-qrcode@^0.2.7:
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/react-native-qrcode/-/react-native-qrcode-0.2.7.tgz#d103166fb1a5b53643e8bf7b88c0672e689ac4f8"
@@ -5504,7 +5487,7 @@ regjsparser@^0.6.0:
   dependencies:
     jsesc "~0.5.0"
 
-reinput@^3.2.0:
+reinput@^3.7.0:
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/reinput/-/reinput-3.7.0.tgz#0947c13e1d72f13d1882daec774dc39e267beeff"
   integrity sha512-eVVSLdPNgNYtqR5wzJqByg4HgwKYmtzUa0y/a4EIdnPwOhm+kEa+7b6oCGmsIhuRDXLmEACjtaelAepu4K0RHQ==

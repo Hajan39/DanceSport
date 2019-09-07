@@ -240,8 +240,8 @@ function setInitCompleted() {
 
 function logout() {
     console.log("signing out");
-
     firebase.auth().signOut();
+    UserStore.signOut();
 }
 
 const FirebaseWorker = {

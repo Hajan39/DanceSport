@@ -16,7 +16,7 @@ export default {
   tabIconSelected: blue,
   tabBar: grey,
   warningText: red,
-  iconColor: blue,
+  iconColor: white,
   iconColorOff: darkGrey,
   lightsDefault: shineRed,
   customerDefault: shineGreen,

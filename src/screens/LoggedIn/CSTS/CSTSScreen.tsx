@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { NavigationScreenProps } from 'react-navigation';
 import { CstsDancerData } from '../../../objects/profileData';
-import { Icon, Button, Tabs, Tab, View, Text, ScrollableTab } from 'native-base';
+import { Icon, Button, Tabs, Tab, View, ScrollableTab } from 'native-base';
 import Colors from '../../../constants/Colors';
 import FirebaseWorker from '../../../objects/FirebaseWorker';
 import BackgroundImage from '../../../components/BackgroundImage';
@@ -62,7 +62,11 @@ class CSTSScreen extends ComponentBase<CSTSScreenProps, CSTSScreenState> {
                     onPress={() => params.toggleFavorites()} />}
 
             </>
-            )
+            ),
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
         }
     };
 
