@@ -71,12 +71,11 @@ class CompetitionDetailScreen extends React.Component<CompetitionDetailScreenPro
                         <CardItem footer bordered>
                             <Text onPress={() => this.showGroupCompetitions(detail.groupId)}>Zobrazit všechny soutěže v této skupině</Text>
                         </CardItem>
-                        <AdMobBanner
-
-                                bannerSize="smartBannerPortrait"
-                                adUnitID="ca-app-pub-1900213351962804/6193625682"
-                                testDeviceID="EMULATOR" />
                     </Card>
+                    <AdMobBanner
+                        bannerSize="smartBannerPortrait"
+                        adUnitID="ca-app-pub-1900213351962804/6193625682"
+                        testDeviceID="EMULATOR" />
                 </ScrollView>
             </SafeAreaView>);
         }
