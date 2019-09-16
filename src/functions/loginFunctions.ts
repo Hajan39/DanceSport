@@ -52,18 +52,14 @@ async function loginGoogleUser(onSignUser?: (user: User) => void) {
 }
 
 async function onSignIn(googleUser: any, onSignUser?: (user: User) => void): Promise<void> {
-    console.log("onsignin");
     var credential = firebase.auth.GoogleAuthProvider.credential(
         googleUser.idToken,
         googleUser.accessToken
     );
     // Sign in with credential from the Google user.
     return firebase.auth().signInWithCredential(credential).then(x => {
-        console.log('loginFunctions');
-
-        if (x.user && onSignUser) {
+        if (x.user && onSignUser) {        
             onSignUser(x.user)
-
         }
     }
     ).catch(function (error) {
@@ -73,7 +69,6 @@ async function onSignIn(googleUser: any, onSignUser?: (user: User) => void): Pro
 }
 
 async function signOut() {
-    console.log('signout');
     return firebase.auth().signOut();
 }
 

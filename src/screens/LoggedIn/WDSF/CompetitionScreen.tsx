@@ -30,8 +30,6 @@ class CompetitionScreen extends React.Component<CompetitionScreenProps, Competit
         var to = date.getFullYear() + "-" + (date.getMonth() + 2) + "-" + date.getDate();
 
         this.state = props.navigation.getParam("compSearch", { competitions: [], from, to })
-        console.log(this.state);
-
     }
     static navigationOptions = ({ navigation }: NavigationScreenProps) => {
         return {
@@ -49,7 +47,6 @@ class CompetitionScreen extends React.Component<CompetitionScreenProps, Competit
     };
     componentDidMount() {
         WDSF.getCompetitionList(this.state.from, this.state.to, this.state.groupId).then(x => {
-            console.log(x.length);
             this.setState({ competitions: x });
         }).catch(x => {
             console.log("err", x);

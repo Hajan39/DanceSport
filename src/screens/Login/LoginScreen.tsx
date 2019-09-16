@@ -7,6 +7,7 @@ import Colors from '../../constants/Colors';
 import LoadingPage from '../../objects/loadingPage';
 import { NavigationScreenProps } from 'react-navigation';
 import Login from '../../functions/loginFunctions';
+import UserStore from '../../strores/UserStore';
 
 export interface LoginScreenState {
     email: string,
@@ -30,8 +31,8 @@ class LoginScreen extends React.Component<NavigationScreenProps, LoginScreenStat
 
     onLoginOrRegister = () => {
         this.setState({ loading: true });
-        Login.loginGoogleUser(FirebaseWorker.updateLogin).then(result => {
-            this.setState({ loading: result.success, error: "Přerušili jste zadávání. Opakujte prosím." });
+        Login.loginGoogleUser(FirebaseWorker.getUserData).then(result => {
+                this.setState({ loading: result.success, error: "Přerušili jste zadávání. Opakujte prosím." });
         }).catch(error => {
             this.setState({ loading: false, error: error.message });
 
@@ -61,7 +62,7 @@ class LoginScreen extends React.Component<NavigationScreenProps, LoginScreenStat
         return (<KeyboardAvoidingView style={{ flex: 1, flexDirection: "column" }} behavior="padding" enabled>
             <Image source={require("../../../assets/logo.png")} resizeMode="contain" style={{ alignContent: "center", alignItems: "center", alignSelf: "center", width: '90%', flex: 1 }} />
             <Divider />
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 2 }}>
                 <List>
                     <ListItem >
                         <Text style={{ flex: 1 }}>Email</Text>

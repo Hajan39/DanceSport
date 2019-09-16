@@ -39,9 +39,7 @@ class SideMenu extends ComponentBase<SideMenuProps, SideMenuState> {
         deliveryClient.items<Shop>()
         .type('shop')
         .toObservable()
-        .subscribe(response => {
-            console.log('SideMenu', response.items.length);
-            
+        .subscribe(response => {            
             this.setState({ shops: response.items });;
         });        
     }

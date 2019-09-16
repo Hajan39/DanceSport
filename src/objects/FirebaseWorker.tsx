@@ -41,8 +41,6 @@ async function uploadImage(uri: string, user: User): Promise<string> {
 async function getUserData(fireuser: firebase.User): Promise<User> {
     var coll = db.collection('users').doc(fireuser.uid)
     coll.onSnapshot((snapshot: firebase.firestore.DocumentSnapshot) => {
-        console.log("snapshot", snapshot.exists);
-
         if (snapshot.exists) {
             var user = snapshot.data() as User;
             UserStore.setUser(user)
@@ -125,7 +123,7 @@ async function updateVisibility(visibility: {csts: boolean, wdsf: boolean}){
     var cdata = firebase.auth().currentUser;
     if (cdata) {
         const userRef = db.collection("users").doc(cdata.uid);
-        var data = userRef.update({ interest: visibility })
+        userRef.update({ interest: visibility })
     }
 }
 
@@ -162,7 +160,6 @@ function setInitCompleted() {
 }
 
 function logout() {
-    console.log("signing out");
     UserStore.signOut();
 }
 

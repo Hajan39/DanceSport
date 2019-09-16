@@ -66,8 +66,6 @@ async function getCachedUrlContent<T>(urlAsKey: string, newData: boolean, type: 
             }
         });
     }
-    console.log("gettingFromServer", urlAsKey, type);
-
     return await GetNewDataFromServer<T>(urlAsKey, type);
 };
 

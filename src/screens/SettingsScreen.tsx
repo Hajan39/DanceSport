@@ -38,9 +38,7 @@ class SettingsScreen extends ComponentBase<NavigationScreenProps, SettingsScreen
         }
     };
 
-    render() {
-        console.log('SettingsScreen', this.state.visible);
-        
+    render() {        
         return (<Container>
             <ScrollView>
                 <List><ListItem itemDivider>

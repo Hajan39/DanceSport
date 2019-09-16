@@ -16,25 +16,16 @@ class LoadingScreen extends React.Component<NavigationScreenProps, LoadingScreen
 
     componentDidMount() {
         var unmount = firebase.auth().onAuthStateChanged((user) => {
-            console.log("uaee");
-
             if (user) {
-                console.log('nonull');
-
-                var data = FirebaseWorker.getUserData(user).then(data => {
+                FirebaseWorker.getUserData(user).then(data => {
                     if (data.firstLoad) {
-                        console.log("slideshow");
-
                         this.props.navigation.navigate("slideshow");
                     } else {
-                        console.log('home');
 
                         this.props.navigation.navigate("home");
                     }
                 })
             } else {
-                console.log('login');
-
                 this.props.navigation.navigate("login")
             }
         })
