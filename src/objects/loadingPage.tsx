@@ -1,33 +1,12 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
-
-function GetLoadingImage() {
-    var index = Math.floor(Math.random() * 3) + 1;
-    switch (index) {
-        case 1:
-            return require("../../assets/pair.gif")
-        case 2:
-            return require("../../assets/fred.gif")
-        case 3:
-            return require("../../assets/balette.gif")
-        default:
-            return require("../../assets/pair.gif")
-    }
-}
-
+import { Spinner } from "native-base";
 
 const LoadingPage = (text: string) => {
     return (
         <View style={styles.container}>
+            <Spinner size="large" />
             <Text>{text}</Text>
-            <Image
-                source={GetLoadingImage()}
-                resizeMode="contain"
-                style={{
-                    maxHeight: "80%",
-                    maxWidth: '100%'
-                }}>
-            </Image>
         </View>
     )
 }

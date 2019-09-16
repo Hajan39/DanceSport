@@ -7,6 +7,9 @@ import React, { Component } from 'react';
 import { YellowBox, ImageBackground } from 'react-native';
 import _ from 'lodash';
 import Layout from './src/constants/Layout';
+import {
+  setCustomText
+} from 'react-native-global-props'
 
 YellowBox.ignoreWarnings(['Setting a timer']);
 const _console = _.clone(console);
@@ -25,14 +28,26 @@ export default class App extends Component<{}, { fontLoaded: boolean }> {
 
   async componentDidMount() {
 
-    await Font.loadAsync({
-     
-      fontello: require('./assets/fonts/fontello.ttf'),
-      ...Ionicons.font,
-    });
-    this.setState({ fontLoaded: true })
+    Font.loadAsync({
 
+      fontello: require('./assets/fonts/fontello.ttf'),
+      'OpenSans-Regular': require('./assets/fonts/OpenSans-Regular.ttf'),
+      ...Ionicons.font,
+    }).then(()=>{
+    this.setState({ fontLoaded: true })
+    this.defaultFonts();
+    });
   }
+
+  defaultFonts(){
+    const customTextProps = {
+      style: {
+        fontFamily: 'OpenSans-Regular'
+      }
+    }
+    setCustomText(customTextProps)
+  }
+
   render() {
     return (
       <Root>

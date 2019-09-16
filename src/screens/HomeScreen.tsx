@@ -1,30 +1,24 @@
 import * as React from 'react';
-import { Image, StyleSheet, View, ScrollView } from 'react-native';
-import { Card, CardItem, Left, Thumbnail, Body, Right, Button, Icon, Text, Title } from 'native-base';
+import { Image, View, ScrollView } from 'react-native';
+import { Card, CardItem, Button, Icon, Left } from 'native-base';
 import BackgroundImage from '../components/BackgroundImage';
-import { Constants } from 'expo';
 import { NavigationScreenProps } from 'react-navigation';
-import { FbResponseObject } from '../objects/FacebookResponse';
 import Layout from '../constants/Layout';
-import { getAccessToken, getFeeds } from '../server/facebookCommunicator';
 import { ComponentBase } from 'resub';
 import { User } from '../objects/firebaseUser';
 import UserStore from '../strores/UserStore';
-import {
-    AdMobBanner,
-    AdMobInterstitial,
-    PublisherBanner,
-    AdMobRewarded
-} from 'expo-ads-admob';
+import { AdMobBanner } from 'expo-ads-admob';
 import Colors from '../constants/Colors';
+import { Text } from 'react-native';
+import { deliveryClient, Post } from '../objects/kenticoObjects';
+
 export interface HomeScreenProps extends NavigationScreenProps {
 
 }
 
 export interface HomeScreenState {
-    state: object | null,
-    data: FbResponseObject | undefined,
-    user: User | undefined
+    user?: User,
+    posts?: Post[]
 }
 
 class HomeScreen extends ComponentBase<HomeScreenProps, HomeScreenState> {
@@ -32,37 +26,33 @@ class HomeScreen extends ComponentBase<HomeScreenProps, HomeScreenState> {
         var user = UserStore.getUser();
 
         return {
-            state: null, data: undefined, user
+            user
         }
     }
 
     componentDidMount() {
-        var acctoken = getAccessToken().then(x => {
-            getFeeds(x).then(feeds => {
-                this.setState({ data: feeds });
-            })
-        });
 
-
-    }
-
-    bannerError = () => {
+        deliveryClient.items<Post>()
+            .type('post')
+            .toObservable()
+            .subscribe(response => {
+                this.setState({ posts: response.items });;
+            });
 
     }
-
     static navigationOptions = ({ navigation }: NavigationScreenProps) => {
         const { params } = navigation.state;
         return {
-            headerLeft: <Button transparent><Icon name="menu" style={{ color: Colors.iconColor }}
-                onPress={() => navigation.openDrawer()} /></Button>,
+            headerLeft: <Button transparent onPress={() => navigation.openDrawer()} ><Icon name="menu" style={{ color: Colors.iconColor }}
+            /></Button>,
             title: 'Novinky',
             headerStyle: {
                 backgroundColor: Colors.header,
-              },
-              headerTintColor: '#fff',
-              headerTitleStyle: {
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
                 fontWeight: 'bold',
-              },
+            },
         }
     };
     render() {
@@ -71,62 +61,37 @@ class HomeScreen extends ComponentBase<HomeScreenProps, HomeScreenState> {
             <BackgroundImage>
                 <ScrollView  >
                     <View style={{ flex: 1, alignItems: "center", height: Layout.window.height }}>
+                        {this.state.posts && this.state.posts.map((x, index) => {
+                            return <View key={index}>
+                                <Card style={{ width: '90%' }}>
+                                    {x.nadpis && <CardItem>
+                                        <Left>
+                                            <Text style={{ fontSize: 20, fontWeight: "700" }}>{x.nadpis.value}</Text>
+                                        </Left>
+                                    </CardItem>}
+                                    {x.obrazek &&
+                                        <CardItem cardBody>
+                                            {x.obrazek.value.map((image, ix) => {
+                                                return <Image key={ix} source={{ uri: image.url }} style={{ height: Layout.window.width * 0.9 / image.width * image.height, flex: 1 }} />
+                                            })}
+                                        </CardItem>
+                                    }
+                                    {x.popis && <CardItem>
+                                        <Text>{x.popis.value}</Text>
+                                    </CardItem>}
+                                </Card>
+                                {index > 0 && index % 3 && <AdMobBanner
+                                    bannerSize="smartBannerPortrait"
+                                    adUnitID="ca-app-pub-1900213351962804/6808224429"
+                                    testDeviceID="EMULATOR" />}
+                            </View>
+                        })}
 
-                        <Card style={{ width: '90%' }}>
-                            <CardItem cardBody>
-                                <Image source={require("../../assets/logo.png")} style={{ height: Layout.window.width * 0.9, flex: 1 }} />
-                            </CardItem>
-                            <CardItem>
-                                <Text>{"Vítejte v nové aplikaci pro lidi co milují tanec. Aplikace je určena pro všchny, kteří mlují tanec a případně jsou i registrovanými členy jednoho z podporovaných spolků. Není-li Váš taneční spolek ještě mezi nimi, ozvěte se nám a my se pokusíme jej přidat."}</Text>
-                            </CardItem>
-
-                        </Card>
                         <AdMobBanner
 
                             bannerSize="smartBannerPortrait"
                             adUnitID="ca-app-pub-1900213351962804/6808224429"
-                            testDeviceID="EMULATOR"
-                            onDidFailToReceiveAdWithError={this.bannerError} />
-                        {this.state.data &&
-                            this.state.data.data.map(x => {
-                                return <Card style={{ width: '90%' }}>
-                                    {/* <CardItem>
-                                <Left>
-                                    <Thumbnail source={{ uri: 'https://scontent.fprg1-1.fna.fbcdn.net/v/t1.0-9/317460_516571561711890_535922201_n.jpg?_nc_cat=102&_nc_ht=scontent.fprg1-1.fna&oh=f78356ad224009792731e18a6b55cd64&oe=5D91B46E' }} />
-                                    <Body>
-                                        <Text>Český taneční sport</Text>
-                                        <Text note>@tanecnisport</Text>
-                                    </Body>
-                                </Left>
-                            </CardItem> */}
-                                    <CardItem cardBody>
-                                        {x.attachments.data && x.attachments.data.map(image => {
-                                            return <Image source={{ uri: image.media.image.src }} style={{ height: Layout.window.width * 0.9 / image.media.image.width * image.media.image.height, flex: 1 }} />
-                                        })}
-
-                                    </CardItem>
-                                    <CardItem>
-                                        <Text>{x.message}</Text>
-                                    </CardItem>
-                                    {/* <CardItem>
-                                <Left>
-                                    <Button transparent>
-                                        <Icon active name="thumbs-up" />
-                                        <Text>12 Likes</Text>
-                                    </Button>
-                                </Left>
-                                <Body>
-                                    <Button transparent>
-                                        <Icon active name="chatbubbles" />
-                                        <Text>4 Comments</Text>
-                                    </Button>
-                                </Body>
-                                <Right>
-                                    <Text>11h ago</Text>
-                                </Right>
-                            </CardItem> */}
-                                </Card>
-                            })}
+                            testDeviceID="EMULATOR" />
                     </View>
                 </ScrollView>
             </BackgroundImage>

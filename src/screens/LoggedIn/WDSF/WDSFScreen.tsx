@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { NavigationScreenProps, ScrollView } from 'react-navigation';
-import {  Button, Icon, Tabs, Tab, ScrollableTab, Text, Card, CardItem } from 'native-base';
+import { Button, Icon, Tabs, Tab, ScrollableTab, Card, CardItem } from 'native-base';
 import { WdsfDancerData } from '../../../objects/wdsfData';
 import FirebaseWorker from '../../../objects/FirebaseWorker';
 import Colors from '../../../constants/Colors';
@@ -14,6 +14,7 @@ import ProfileHeader from '../../../components/ProfileHeader';
 import WDSFListItem from '../../../components/WDSFListItem';
 import WDSF from '../../../server/wdsfCommunicator';
 import { User } from '../../../objects/firebaseUser';
+import { Text } from 'react-native';
 
 export interface WDSFScreenProps extends NavigationScreenProps {
 
@@ -40,9 +41,9 @@ class WDSFScreen extends ComponentBase<WDSFScreenProps, WDSFScreenState> {
     static navigationOptions = ({ navigation }: NavigationScreenProps) => {
         const { params } = navigation.state;
         return {
-            headerLeft: <Button transparent><Icon name="menu" style={{color: Colors.iconColor}}color="black"
-            onPress={ () => navigation.openDrawer() } /></Button>,
-          title: navigation.state.params && navigation.state.params.name || 'Profil',
+            headerLeft: <Button transparent onPress={() => navigation.openDrawer()} ><Icon name="menu" style={{ color: Colors.iconColor }} color="black"
+                onPress={() => navigation.openDrawer()} /></Button>,
+            title: navigation.state.params && navigation.state.params.name || 'Profil',
             headerStyle: {
                 backgroundColor: Colors.header,
                 borderBottomWidth: 0,
@@ -50,27 +51,27 @@ class WDSFScreen extends ComponentBase<WDSFScreenProps, WDSFScreenState> {
             },
             headerRight: (
                 params && !params.isMe && <Icon
-                    style={{ paddingRight: 20 }}
+                    style={{ paddingRight: 20, color: Colors.white }}
                     name="heart"
                     fontSize={25}
                     color="red"
                     type="FontAwesome"
                     onPress={() => params.toggleFavorites()} />
             ),
-              headerTintColor: '#fff',
-              headerTitleStyle: {
+            headerTintColor: '#fff',
+            headerTitleStyle: {
                 fontWeight: 'bold',
-              },
+            },
         }
     };
 
     wdsfProfileClick(id: number): void {
-        WDSF.getDancerAllData(id).then(x=> {
+        WDSF.getDancerAllData(id).then(x => {
             this.props.navigation.push("Wdsf", { dancerData: x })
         })
     }
 
-  
+
     toggleFavorites = () => {
         if (this.state.profile && this.state.loggedUser) {
             var idt = this.state.profile.profile.id;
@@ -91,16 +92,16 @@ class WDSFScreen extends ComponentBase<WDSFScreenProps, WDSFScreenState> {
 
     }
     render() {
-        const {partner, profile} = this.state.profile;
+        const { partner, profile } = this.state.profile;
         if (this.state.profile) {
             return (
                 <BackgroundImage>
-                    <ProfileHeader id={profile.id} groupType={GroupType.WDSF} profile={profile}/>
+                    <ProfileHeader id={profile.id} groupType={GroupType.WDSF} profile={profile} />
                     <Tabs renderTabBar={() => <ScrollableTab style={{ backgroundColor: "transparent" }} backgroundColor="transparent" tabsContainerStyle={{ backgroundColor: "transparent" }} />} style={{ height: "10%", backgroundColor: "transparent" }} >
                         <Tab heading="Informace" tabStyle={{ backgroundColor: 'transparent' }} textStyle={{ color: '#000' }} activeTabStyle={{ backgroundColor: 'transparent' }} activeTextStyle={{ color: Colors.blue, fontWeight: '700', textDecorationLine: "underline", textDecorationStyle: "solid" }}>
                             <BackgroundImage>
 
-                                <Text style={{ paddingLeft: 20 }}>Licence</Text>
+                                <Text style={{ fontSize: 20, alignSelf: "center" }}>Licence</Text>
                                 {profile.licenses.map((x, i) => {
                                     return (
                                         <Card key={i}>
@@ -113,7 +114,7 @@ class WDSFScreen extends ComponentBase<WDSFScreenProps, WDSFScreenState> {
                                         </Card>
                                     )
                                 })}
-                                <Barcode value={profile.id.toString()} format="CODE128" />
+                                <Barcode  value={profile.id.toString()} format="CODE128" />
                             </BackgroundImage>
                         </Tab>
                         {partner &&

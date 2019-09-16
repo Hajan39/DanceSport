@@ -5,7 +5,7 @@ const wdsfUrl = "https://services.worlddancesport.org/api/1/";
 
 enum HeaderType {
     Competition = 'application/vnd.worlddancesport.competition+json',
-    Profile= 'application/vnd.worlddancesport.person+json',
+    Profile = 'application/vnd.worlddancesport.person+json',
 }
 
 
@@ -34,23 +34,23 @@ function getData(url: string, contentType: string, newData: boolean) {
 }
 
 
-function getCompetitionList( from?: string, to?: string, group?: number ,newData: boolean = false): Promise<WdsfCompetitionGlobal[]> {
+function getCompetitionList(from?: string, to?: string, group?: number, newData: boolean = false): Promise<WdsfCompetitionGlobal[]> {
     var join: string[] = [];
-    from&&join.push("from="+from);
-    to&&join.push("to="+to);
-    group&&join.push("groupId="+group);
-    return getCachedUrlContent<WdsfCompetitionGlobal[]>(wdsfUrl+"competition"+(join.length>0?("?"+join.join("&")):""), newData, HeaderType.Competition);
+    from && join.push("from=" + from);
+    to && join.push("to=" + to);
+    group && join.push("groupId=" + group);
+    return getCachedUrlContent<WdsfCompetitionGlobal[]>(wdsfUrl + "competition" + (join.length > 0 ? ("?" + join.join("&")) : ""), newData, HeaderType.Competition);
 }
 
 function getCompetitionDetail(compId: number, newData: boolean = false): Promise<WdsfCompetitionDetail> {
-    return getCachedUrlContent<WdsfCompetitionDetail>(wdsfUrl+"competition/"+compId, newData, HeaderType.Competition);
+    return getCachedUrlContent<WdsfCompetitionDetail>(wdsfUrl + "competition/" + compId, newData, HeaderType.Competition);
 }
 
 
 
 /// -------------- Common methods --------------\\\
 
-async function getCachedUrlContent<T>(urlAsKey: string, newData: boolean, type: HeaderType|string): Promise<T> {
+async function getCachedUrlContent<T>(urlAsKey: string, newData: boolean, type: HeaderType | string): Promise<T> {
     if (newData) {
         await AsyncStorage.getItem(urlAsKey, async (err, value) => {
             if (value) {
@@ -67,11 +67,11 @@ async function getCachedUrlContent<T>(urlAsKey: string, newData: boolean, type: 
         });
     }
     console.log("gettingFromServer", urlAsKey, type);
-    
+
     return await GetNewDataFromServer<T>(urlAsKey, type);
 };
 
-async function GetNewDataFromServer<T>(urlAsKey: string, type: HeaderType|string): Promise<T> {
+async function GetNewDataFromServer<T>(urlAsKey: string, type: HeaderType | string): Promise<T> {
     let apiRes: T = await fetch(urlAsKey, {
         method: 'GET',
         headers: new Headers({

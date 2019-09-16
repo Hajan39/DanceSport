@@ -9,7 +9,8 @@ enum TriggerKeys {
     Router = 'router',
     User = 'user',
     Wdsf = "wdsf",
-    Csts = "csts"
+    Csts = "csts",
+    Visible="visible"
 }
 
 @AutoSubscribeStore
@@ -17,37 +18,47 @@ class UserStore extends StoreBase {
     private wdsfProfile?: WdsfDancerData;
     private cstsProfile?: CstsDancerData;
     private user?: User
-    private routerSettings?: {firstLoad: boolean, csts: boolean, wdsf: boolean}
-/**
- *
- */
-constructor() {
-    super();
-}
-    signOut(){
+    private routerSettings?: { firstLoad: boolean, csts: boolean, wdsf: boolean }
+    private visibleState?: {csts: boolean, wdsf: boolean}
+    /**
+     *
+     */
+    constructor() {
+        super();
+    }
+    signOut() {
         this.wdsfProfile = undefined;
-        this.cstsProfile= undefined;
+        this.cstsProfile = undefined;
         this.user = undefined;
-        this.routerSettings= undefined;
+        this.routerSettings = undefined;
         this.trigger();
     }
 
     setUser(user: User) {
-        if(!this.routerSettings || this.routerSettings.firstLoad !=user.firstLoad || this.routerSettings.csts != !!user.cstsIdt|| this.routerSettings.wdsf != !!user.wdsfId){
-            this.routerSettings = {firstLoad: user.firstLoad, csts: !!user.cstsIdt, wdsf: !!user.wdsfId}
+        if (!this.routerSettings || this.routerSettings.firstLoad != user.firstLoad || this.routerSettings.csts != !!user.cstsIdt || this.routerSettings.wdsf != !!user.wdsfId) {
+            this.routerSettings = { firstLoad: user.firstLoad, csts: !!user.cstsIdt, wdsf: !!user.wdsfId }
             this.trigger(TriggerKeys.Router)
+        }
+
+        if(!this.visibleState||this.visibleState.wdsf !== user.interest.wdsf || this.visibleState.csts !== user.interest.csts){
+            this.visibleState = user.interest;    
+            this.trigger(TriggerKeys.Visible);
+        }
+        if(!user.interest){
+            this.visibleState = {csts: true, wdsf: true}
+            this.trigger(TriggerKeys.Visible)
         }
 
         this.user = user;
         this.trigger(TriggerKeys.User);
 
-        if(user.cstsIdt){
-            CSTS.getDancerAllData(user.cstsIdt).then(x=> {
+        if (user.cstsIdt) {
+            CSTS.getDancerAllData(user.cstsIdt).then(x => {
                 this.setCstsProfile(x);
             })
         }
-        if(user.wdsfId){
-            WDSF.getDancerAllData(user.wdsfId).then(x=> {
+        if (user.wdsfId) {
+            WDSF.getDancerAllData(user.wdsfId).then(x => {
                 this.setWdsfProfile(x);
             })
         }
@@ -63,24 +74,34 @@ constructor() {
         this.trigger(TriggerKeys.Csts);
     }
 
+    setVisibleState(csts: boolean, wdsf: boolean){
+        this.visibleState = {csts, wdsf};
+        this.trigger(TriggerKeys.Visible);
+    }
+
     @autoSubscribeWithKey(TriggerKeys.User)
     getUser() {
         return this.user;
     }
 
     @autoSubscribeWithKey(TriggerKeys.Wdsf)
-    getWdsfProfile(){
+    getWdsfProfile() {
         return this.wdsfProfile;
     }
 
     @autoSubscribeWithKey(TriggerKeys.Csts)
-    getCstsProfile(){
+    getCstsProfile() {
         return this.cstsProfile;
     }
 
     @autoSubscribeWithKey(TriggerKeys.Router)
-    getRouterSettings(){
+    getRouterSettings() {
         return this.routerSettings;
+    }
+
+    @autoSubscribeWithKey(TriggerKeys.Visible)
+    getVisibleSettings(){
+        return this.visibleState;
     }
 }
 

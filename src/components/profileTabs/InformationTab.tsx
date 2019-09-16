@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { Card, CardItem, Left, Text, Body, Separator } from 'native-base';
+import { Card, CardItem, Left,  Body, Separator } from 'native-base';
 import { Profile, CstsDancerData } from '../../objects/profileData';
 import { ScrollView } from 'react-native';
 import BackgroundImage from '../BackgroundImage';
+import { Text } from 'react-native';
+import Colors from '../../constants/Colors';
 
 export interface InfrormationTabProps {
     profile: CstsDancerData
@@ -27,7 +29,7 @@ class InfrormationTab extends React.Component<InfrormationTabProps, Infrormation
         return (<ScrollView style={{ backgroundColor: "transparent" }}>
             <BackgroundImage>
                 <Card transparent style={{ backgroundColor: "transparent" }}>
-                <CardItem style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}>
+                    <CardItem style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}>
                         <Left>
                             <Text>IDT</Text>
                         </Left>
@@ -57,7 +59,7 @@ class InfrormationTab extends React.Component<InfrormationTabProps, Infrormation
                         </Left>
                         <Body>
                             <Text>{profile.Klub.Nazev}</Text>
-                            <Text note>{this.parseDate(profile.Klub.DatVstupu)}</Text>
+                            <Text style={{color: Colors.grey, fontSize: 10}}>{this.parseDate(profile.Klub.DatVstupu)}</Text>
                         </Body>
                     </CardItem>
                     <CardItem style={{ backgroundColor: "transparent" }} >
@@ -76,14 +78,14 @@ class InfrormationTab extends React.Component<InfrormationTabProps, Infrormation
                             {compData.PlatneZdravProhlidky.length > 0 ?
                                 <>
                                     <Text>{compData.PlatneZdravProhlidky[0].Nazev}</Text>
-                                    <Text note>do {this.parseDate(compData.PlatneZdravProhlidky[0].DoData)}</Text>
+                                    <Text style={{color: Colors.grey, fontSize: 10}}>do {this.parseDate(compData.PlatneZdravProhlidky[0].DoData)}</Text>
                                 </> : <Text>NE</Text>
                             }
                         </Body>
                     </CardItem>
-                    <Separator bordered>
+                    <CardItem bordered style={{justifyContent: "center", backgroundColor: Colors.transparent}}>
                         <Text>OSOBNÍ ZAŘAZENÍ</Text>
-                    </Separator>
+                    </CardItem>
                     <CardItem style={{ backgroundColor: "transparent" }} >
                         <Left>
                             <Text>Standard</Text>

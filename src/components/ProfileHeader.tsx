@@ -21,22 +21,22 @@ export default class ProfileHeader extends React.Component<ProfileHeaderProps, {
     componentDidMount() {
         switch (this.props.groupType) {
             case GroupType.CSTS:
-                FirebaseWorker.getCstsDataByIdt(this.props.id).then(x => {     
+                FirebaseWorker.getCstsDataByIdt(this.props.id).then(x => {
                     if (x && x.photoUrl)
                         this.setState({ image: { uri: x.photoUrl } });
                 })
                 break;
-                case GroupType.WDSF:
-                    FirebaseWorker.getWdsfDataByIdt(this.props.id).then(x => {
-                        if (x && x.photoUrl)
-                            this.setState({ image: { uri: x.photoUrl } });
-                    })
-                    break;
-            
+            case GroupType.WDSF:
+                FirebaseWorker.getWdsfDataByIdt(this.props.id).then(x => {
+                    if (x && x.photoUrl)
+                        this.setState({ image: { uri: x.photoUrl } });
+                })
+                break;
+
             default:
                 break;
         }
-        
+
     }
 
 
@@ -92,42 +92,40 @@ export default class ProfileHeader extends React.Component<ProfileHeaderProps, {
                                 <Text style={{ color: Colors.white }}>Země: {profile.country}</Text>
                                 <Text style={{ color: Colors.white }}>Věková skupina: {profile.ageGroup}</Text>
                             </View>
-                    </View> }
-                    {compData && <View style={{
-                            width: "100%",
-                            paddingTop: 10,
-                            alignItems: 'center',
-                            flexDirection: "row",
-                            justifyContent: "space-evenly"
-                        }}>
-                            <LinearGradient style={styles.buttonContainer} start={[0, 1]} end={[1, 0]}
-                                colors={[compData.PlatneZdravProhlidky.length > 0 ? Colors.white : '#ff0000', 'transparent']}>
-                                <TouchableOpacity style={{
-                                    width: '100%', height: '100%', flexDirection: 'row',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}
-                                //onPress={() => this.props.onHealthCheckPressed()}
-                                >
-
-                                    <Icon type="FontAwesome" name="heart" style={{ fontSize: 12, color: "black" }} />
-                                    <Text style={{ fontSize: 13 }}> {compData.PlatneZdravProhlidky.length > 0 ? "✔" : "X"}</Text>
-                                </TouchableOpacity>
-                            </LinearGradient>
-                            <LinearGradient style={styles.buttonContainer} start={[0, 1]} end={[1, 0]}
-                                colors={['transparent', compData.Souticence ? Colors.white : '#ff0000']}>
-                                <TouchableOpacity style={{
-                                    width: '100%', height: '100%', flexDirection: 'row',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}
-                                //onPress={() => this.props.onPayLicencePressed()}
-                                >
-                                    <Icon type="FontAwesome" name="id-badge" style={{ fontSize: 15, color: 'black' }} />
-                                    <Text style={{ fontSize: 13 }}> {compData.Souticence ? "✔" : "X"}</Text>
-                                </TouchableOpacity>
-                            </LinearGradient>
                         </View>}
+                    {compData && <View style={{
+                        width: "100%",
+                        paddingTop: 10,
+                        alignItems: 'center',
+                        flexDirection: "row",
+                        justifyContent: "space-evenly"
+                    }}>
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity style={{
+                                width: '100%', height: '100%', flexDirection: 'row',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                            //onPress={() => this.props.onHealthCheckPressed()}
+                            >
+
+                                <Icon type="FontAwesome" name="heart" style={{ fontSize: 12, color: "black" }} />
+                                <Text style={{ fontSize: 13 }}> {compData.PlatneZdravProhlidky.length > 0 ? "✔" : "X"}</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity style={{
+                                width: '100%', height: '100%', flexDirection: 'row',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                            //onPress={() => this.props.onPayLicencePressed()}
+                            >
+                                <Icon type="FontAwesome" name="id-badge" style={{ fontSize: 15, color: 'black' }} />
+                                <Text style={{ fontSize: 13 }}> {compData.Souticence ? "✔" : "X"}</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>}
                 </View>
             </ImageBackground>)
     }
@@ -142,6 +140,7 @@ const styles = StyleSheet.create({
         height: 30,
         flexDirection: 'row',
         justifyContent: 'center',
+        backgroundColor: Colors.white,
         alignItems: 'center',
         marginBottom: 20,
         width: '30%',

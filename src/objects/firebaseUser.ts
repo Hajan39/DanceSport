@@ -15,13 +15,14 @@ export interface User {
     followingUid: string[],
     lastLogin: number,
     created: number
+    interest: {csts: boolean, wdsf: boolean}
 }
 
-export function createNewUser(newUser: firebase.User, displayName: string|null, cstsIdt: number | null, wdsfId: number | null): User {
+export function createNewUser(newUser: firebase.User, displayName: string | null, cstsIdt: number | null, wdsfId: number | null): User {
     return {
-        firstLoad: true,
+        firstLoad: cstsIdt || wdsfId ? false : true,
         email: newUser.email,
-        name: displayName || newUser.displayName ,
+        name: displayName || newUser.displayName,
         firebaseId: newUser.uid,
         photoUrl: newUser.photoURL,
         cstsIdt: cstsIdt,
@@ -31,6 +32,7 @@ export function createNewUser(newUser: firebase.User, displayName: string|null, 
         followingByUid: [],
         followingUid: [],
         lastLogin: Date.now(),
-        created: Date.now()
+        created: Date.now(),
+        interest: {csts: true, wdsf: true}
     }
 }

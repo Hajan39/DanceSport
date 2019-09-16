@@ -4,37 +4,66 @@ import { Card, ListItem, List } from 'native-base';
 import { Image } from 'react-native-elements';
 import * as MailComposer from 'expo-mail-composer';
 import Colors from '../../constants/Colors';
+import { deliveryClient, Prispevatel, About } from '../../objects/kenticoObjects';
 
 export interface AboutTabProps {
-    
-}
- 
-const AboutTab: React.SFC<AboutTabProps> = () => {
-    return (  <ScrollView>
-        <Card transparent style={styles.topContainer}>
-        <Text style={styles.header}>O aplikaci Taneční sport</Text>
-        <Text style={styles.text}>Tato aplikace byla vyvinuta na základě jednoho nápadu, který se zrodil, aby každý taneční, a i každý příznivce tance, mohl mít informace, které potřebuje stále u sebe, v telfonu.
-        Po zpřístupnění od WDSF se nám podařilo implementovat první zdroj a následně i ČSTS. </Text>
-        <Text style={styles.text}>Jelikož aplikaci vyvíjí poze parta nadšenců, umístili jsme do aplkace několik reklam, které nám pomohou alespoň část investovaného času dostat zpět. Také bychom byli rádi za příspěvek od Vás, který by pomohl k dalšímu rozšíření a rozvoji aplikace.</Text>
-        <Text style={styles.text}>Příspěvek nemusá to být jen finanční. Můžete se také zapojit do vývoje aplikace tím, že navrhnete, co by ještě aplikace mohla zobrazovat. Také pokud máte nějaký spolek, který chcete zobrazit zde v aplikaci, prosím ozvěte se nám.</Text>
 
-        <Text style={styles.subheader}>Přispěvatelé</Text>
-        <List>
-            <ListItem onPress={() => Linking.openURL("http://dancesportfamily.cz/")}>
-                 <Image resizeMode="stretch" source={require("../../../assets/logo.png")} style={{height: 26, width: 26}} />
-                <Text style={styles.text}>Podpora, informace - DancesportFamily</Text></ListItem>
-                </List>
+}
+export interface AboutTabState {
+    prispevatel: Prispevatel[],
+    about: About[]
+
+}
+class AboutTab extends React.Component<AboutTabProps, AboutTabState> {
+    constructor(props: AboutTabProps){
+        super(props);
+        this.state={prispevatel:[], about:[]}
+    }
+componentDidMount() {
+    deliveryClient.items<Prispevatel>()
+    .type('prispevatele')
+    .toObservable()
+    .subscribe(response => {
+        this.setState({ prispevatel: response.items });;
+    });
+    deliveryClient.items<About>()
+    .type('about')
+    .toObservable()
+    .subscribe(response => {        
+        this.setState({ about: response.items });;
+    });
+}
+
+   render() {
+    return (<ScrollView>
+        <Card transparent style={styles.topContainer}>
+            {this.state.about.length>0 && this.state.about[0].header&&<Text style={styles.header}>{this.state.about[0].header.value}</Text>}
+            {this.state.about.length>0 && this.state.about[0].description&&<Text style={styles.text}>{this.state.about[0].description.value}</Text>}
+            
+            <Text style={styles.subheader}>Přispěvatelé</Text>
+            <List>
+                {this.state.prispevatel.map((item, index) => {
+                    var url = item.web.value.toString();
+                    
+                    return <ListItem key={index} onPress={() => Linking.openURL(url)}>
+                    <Image resizeMode="stretch" source={{uri: item.image && item.image.value[0].url}} style={{ height: 26, width: 26 }} />
+                    {item.name && <Text style={styles.text}>{item.name.value}</Text>}
+                    </ListItem>
+                })}
+                
+            </List>
         </Card>
         <Card style={styles.bottomContainer}>
-            <Text onPress={() => MailComposer.composeAsync({recipients: ["info@tanecnisport.cz"],bccRecipients: ["Hajan39@gmail.com"], subject: "Email z aplikace Tanecnisport"})}>Created by Jan Hanč</Text> 
+            <Text onPress={() => MailComposer.composeAsync({ recipients: ["info@tanecnisport.cz"], bccRecipients: ["Hajan39@gmail.com"], subject: "Email z aplikace Tanecnisport" })}>Created by Jan Hanč</Text>
         </Card>
-        </ScrollView>);
+    </ScrollView>);
+   }
 }
- 
+
 export default AboutTab;
 
 
-const styles= StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "column",

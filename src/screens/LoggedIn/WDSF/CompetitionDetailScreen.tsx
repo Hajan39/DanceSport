@@ -9,26 +9,27 @@ import Colors from '../../../constants/Colors';
 import { NavigationScreenProps } from 'react-navigation';
 import WDSF from '../../../server/wdsfCommunicator';
 import LoadingPage from '../../../objects/loadingPage';
+import { AdMobBanner } from 'expo-ads-admob';
 
 export interface CompetitionDetailScreenProps extends NavigationScreenProps {
 }
 
 export interface CompetitionDetailScreenState {
-    compDetail: WdsfCompetitionDetail|undefined,
+    compDetail: WdsfCompetitionDetail | undefined,
     id: number
 
 }
 
 class CompetitionDetailScreen extends React.Component<CompetitionDetailScreenProps, CompetitionDetailScreenState> {
-        constructor(props: CompetitionDetailScreenProps) {
+    constructor(props: CompetitionDetailScreenProps) {
         super(props);
-        this.state = { compDetail: undefined, id: this.props.navigation.getParam("compId")  };
-        
+        this.state = { compDetail: undefined, id: this.props.navigation.getParam("compId") };
+
     }
 
     componentDidMount() {
-        WDSF.getCompetitionDetail(this.state.id).then(x=> {
-            this.setState({ compDetail:x  });
+        WDSF.getCompetitionDetail(this.state.id).then(x => {
+            this.setState({ compDetail: x });
             this.props.navigation.setParams({
                 detail: x
             })
@@ -38,7 +39,7 @@ class CompetitionDetailScreen extends React.Component<CompetitionDetailScreenPro
     static navigationOptions = ({ navigation }: NavigationScreenProps) => {
         const { params } = navigation.state;
         return {
-            title: params && params.detail? (params.detail.age+ " "+params.detail.discipline): "Detail",
+            title: params && params.detail ? (params.detail.age + " " + params.detail.discipline) : "Detail",
             headerStyle: {
                 backgroundColor: Colors.header,
             },
@@ -49,38 +50,43 @@ class CompetitionDetailScreen extends React.Component<CompetitionDetailScreenPro
         }
     };
 
-    render() { 
-    const detail = this.state.compDetail
-    if(detail){
-    return ( <SafeAreaView>
-             <ScrollView>
-             <Text style={{fontSize: 25, alignSelf: "center", color: Colors.header}}>{detail.type}</Text>
+    render() {
+        const detail = this.state.compDetail
+        if (detail) {
+            return (<SafeAreaView>
+                <ScrollView>
+                    <Text style={{ fontSize: 25, alignSelf: "center", color: Colors.header }}>{detail.type}</Text>
 
-                 <Card>
-                     <CardItem style={{flexDirection: "column"}}>
-                         <Text>Město: {detail.location}</Text>
-                         <Text>Stát: {detail.country}</Text>
-                         <Text>Typ: {detail.type}</Text>
-                         <Text>Datum: {detail.date}</Text>
-                         <Text>Věková kategoie: {detail.age}</Text>
-                         <Text>Divize: {detail.division}</Text>
-                         <Text>Status: {detail.status}</Text>
-                         <Text>Koeficient: {detail.coefficient}</Text>
-                     </CardItem>
-                     <CardItem footer bordered>
-                        <Text  onPress={()=> this.showGroupCompetitions(detail.groupId)}>Zobrazit všechny soutěže v této skupině</Text>
-                     </CardItem>
-                 </Card>
-             </ScrollView>
-         </SafeAreaView> );
-    }
-    else {
-        return LoadingPage("Detail soutěže se načítá")
-    }
+                    <Card>
+                        <CardItem style={{ flexDirection: "column" }}>
+                            <Text>Město: {detail.location}</Text>
+                            <Text>Stát: {detail.country}</Text>
+                            <Text>Typ: {detail.type}</Text>
+                            <Text>Datum: {detail.date}</Text>
+                            <Text>Věková kategoie: {detail.age}</Text>
+                            <Text>Divize: {detail.division}</Text>
+                            <Text>Status: {detail.status}</Text>
+                            <Text>Koeficient: {detail.coefficient}</Text>
+                        </CardItem>
+                        <CardItem footer bordered>
+                            <Text onPress={() => this.showGroupCompetitions(detail.groupId)}>Zobrazit všechny soutěže v této skupině</Text>
+                        </CardItem>
+                        <AdMobBanner
+
+                                bannerSize="smartBannerPortrait"
+                                adUnitID="ca-app-pub-1900213351962804/6193625682"
+                                testDeviceID="EMULATOR" />
+                    </Card>
+                </ScrollView>
+            </SafeAreaView>);
+        }
+        else {
+            return LoadingPage("Detail soutěže se načítá")
+        }
     }
     showGroupCompetitions(groupId: number): void {
-        this.props.navigation.push("Competition", {compSearch: {competitions: [], groupId: groupId}})
+        this.props.navigation.push("Competition", { compSearch: { competitions: [], groupId: groupId } })
     }
- }
+}
 
-   export default CompetitionDetailScreen;
+export default CompetitionDetailScreen;

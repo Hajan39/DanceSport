@@ -1,5 +1,5 @@
 import * as React from 'react';
- import { createStackNavigator } from "react-navigation-stack";
+import { createStackNavigator } from "react-navigation-stack";
 
 import WDSFScreen from '../screens/LoggedIn/WDSF/WDSFScreen';
 import CSTSScreen from '../screens/LoggedIn/CSTS/CSTSScreen';
@@ -8,13 +8,14 @@ import RanklistScreen from '../screens/LoggedIn/CSTS/RanklistScreen'
 import TabBarIcon from "../components/TabBarIcon";
 import CustomIcon from "../CustomIcon";
 import { NavigationRouteConfigMap } from "react-navigation";
-import { createBottomTabNavigator} from 'react-navigation-tabs';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
 import FavoritesWdsfScreen from '../screens/LoggedIn/WDSF/FavoritesWdsfScreen';
 import FavoritesCstsScreen from '../screens/LoggedIn/CSTS/FavoritesCstsScreen';
 import CompetitionDetailScreen from '../screens/LoggedIn/WDSF/CompetitionDetailScreen';
+import Colors from '../constants/Colors';
 
 
-export function getCstsScreens (cstsId: boolean) {
+export function getCstsScreens(cstsId: boolean) {
     const cstsScreens: NavigationRouteConfigMap = {};
 
     if (cstsId) {
@@ -32,24 +33,25 @@ export function getCstsScreens (cstsId: boolean) {
         screen: CstsRanklistScreenStack
     };
 
+
     return createBottomTabNavigator(cstsScreens,
         {
             navigationOptions: ({ navigation }) => ({
                 initialRouteName: 'Csts',
                 headerMode: "none",
                 showLabel: false,
-                drawerLabel: "ČSTS",
-                drawerIcon: ({ focused }) => (
-                    <CustomIcon name="csts" size={20} />
-                ),
-            })
+            }),
+            tabBarOptions: {
+                activeTintColor: Colors.header,
+                inactiveTintColor: 'gray',
+            },
         })
 }
 
-export function getWdsfScreens(wdsfId:boolean) {
-    
+export function getWdsfScreens(wdsfId: boolean) {
+
     const wdsfScreens: NavigationRouteConfigMap = {}
-  
+
     if (wdsfId) {
         wdsfScreens.profile = {
             name: "WDSFScreenStack",
@@ -72,15 +74,12 @@ export function getWdsfScreens(wdsfId:boolean) {
                 initialRouteName: 'Wdsf',
                 headerMode: "none",
                 showLabel: false,
-                drawerLabel: "WDSF",
-                drawerIcon: ({ focused }) => (
-                    <CustomIcon name="wdsf" size={20} />
-                ),
-                headerTintColor: '#fff',
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-            })
+
+            }),
+            tabBarOptions: {
+                activeTintColor: Colors.header,
+                inactiveTintColor: 'gray',
+            },
         });
 }
 
@@ -89,36 +88,36 @@ export const cstsScreenStack = createStackNavigator(
     {
         Csts: CSTSScreen
     }, {
-        navigationOptions: ({ navigation }) => ({
-            initialRouteName: 'Csts',
-            headerMode: "none",
-            showLabel: false,
-            tabBarLabel: "Profil",
-            tabBarIcon: ({ focused }) => (
-                <TabBarIcon focused={focused} name="user" />
-            ),
-        })
+    navigationOptions: ({ navigation }) => ({
+        initialRouteName: 'Csts',
+        headerMode: "none",
+        showLabel: false,
+        tabBarLabel: "Profil",
+        tabBarIcon: ({ focused }) => (
+            <TabBarIcon focused={focused} name="user" />
+        ),
+    })
 
-    });
-    const CSTSFavoritesScreenStack = createStackNavigator(
-        {
-            Favorites: FavoritesCstsScreen,
-            Csts: CSTSScreen
-        }, {
-            navigationOptions: ({ navigation }) => ({
-                initialRouteName: 'Oblíbené',
-                headerMode: "none",
-                showLabel: false,
-                tabBarLabel: "Oblíbené",
-                tabBarIcon: ({ focused }) => (
-                    <TabBarIcon
-                        focused={focused}
-                        name="heart"
-                    />
-                ),
-            })
-    
-        });
+});
+const CSTSFavoritesScreenStack = createStackNavigator(
+    {
+        Favorites: FavoritesCstsScreen,
+        Csts: CSTSScreen
+    }, {
+    navigationOptions: ({ navigation }) => ({
+        initialRouteName: 'Oblíbené',
+        headerMode: "none",
+        showLabel: false,
+        tabBarLabel: "Oblíbené",
+        tabBarIcon: ({ focused }) => (
+            <TabBarIcon
+                focused={focused}
+                name="heart"
+            />
+        ),
+    })
+
+});
 const CstsRanklistScreenStack = createStackNavigator(
     {
         Ranklist: RanklistScreen,
@@ -145,53 +144,53 @@ const WDSFFavoritesScreenStack = createStackNavigator(
     {
         Favorites: FavoritesWdsfScreen
     }, {
-        navigationOptions: ({ navigation }) => ({
-            initialRouteName: 'Oblíbené',
-            headerMode: "none",
-            showLabel: false,
-            tabBarLabel: "Oblíbené",
-            tabBarIcon: ({ focused }) => (
-                <TabBarIcon
-                    focused={focused}
-                    name="heart"
-                />
-            ),
-        })
+    navigationOptions: ({ navigation }) => ({
+        initialRouteName: 'Oblíbené',
+        headerMode: "none",
+        showLabel: false,
+        tabBarLabel: "Oblíbené",
+        tabBarIcon: ({ focused }) => (
+            <TabBarIcon
+                focused={focused}
+                name="heart"
+            />
+        ),
+    })
 
-    });
+});
 
 const wdsfCompetitionScreenStack = createStackNavigator(
-        {
-            Competition: CompetitionScreen,
-            WdsfCompDetail: CompetitionDetailScreen
-        }, {
-            navigationOptions: ({ navigation }) => ({
-                initialRouteName: 'Competition',
-                headerMode: "none",
-                showLabel: false,
-                tabBarLabel: "Soutěže",
-                tabBarIcon: ({ focused }) => (
-                    <TabBarIcon
-                        focused={focused}
-                        name="trophy"
-                    />
-                ),
-            })
-    
-        });
+    {
+        Competition: CompetitionScreen,
+        WdsfCompDetail: CompetitionDetailScreen
+    }, {
+    navigationOptions: ({ navigation }) => ({
+        initialRouteName: 'Competition',
+        headerMode: "none",
+        showLabel: false,
+        tabBarLabel: "Soutěže",
+        tabBarIcon: ({ focused }) => (
+            <TabBarIcon
+                focused={focused}
+                name="trophy"
+            />
+        ),
+    })
+
+});
 
 const wdsfScreenStack = createStackNavigator(
     {
         Wdsf: WDSFScreen
     }, {
-        navigationOptions: ({ navigation }) => ({
-            initialRouteName: 'Wdsf',
-            headerMode: "none",
-            showLabel: false,
-            tabBarLabel: "WDSF",
-            tabBarIcon: ({ focused }) => (
-                <CustomIcon name="wdsf" size={20} />
-            ),
-        })
+    navigationOptions: ({ navigation }) => ({
+        initialRouteName: 'Wdsf',
+        headerMode: "none",
+        showLabel: false,
+        tabBarLabel: "Profil",
+        tabBarIcon: ({ focused }) => (
+            <TabBarIcon focused={focused} name="user" />
+        ),
+    })
 
-    });
+});

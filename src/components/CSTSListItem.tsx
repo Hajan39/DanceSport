@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { Component } from 'react';
 import { Partner } from '../objects/profileData';
-import { ListItem, Text } from 'native-base';
+import { ListItem } from 'native-base';
 import { NavigationScreenProps } from 'react-navigation';
+import { Text } from 'react-native';
+import Colors from '../constants/Colors';
 
 export interface CSTSListItemProps {
     cstsIdt: number,
@@ -16,7 +18,7 @@ const CSTSListItem: React.SFC<CSTSListItemProps> = (props: CSTSListItemProps) =>
             props.onClick(props.cstsIdt)
         }>
             <Text>{props.name}</Text>
-            <Text note>{props.cstsIdt}</Text>
+            <Text style={{color: Colors.grey, fontSize: 10}}>{props.cstsIdt}</Text>
         </ListItem>
     );
 }

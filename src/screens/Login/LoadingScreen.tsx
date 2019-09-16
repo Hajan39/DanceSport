@@ -5,27 +5,40 @@ import firebase from 'firebase';
 import LoadingPage from '../../objects/loadingPage';
 import FirebaseWorker from '../../objects/FirebaseWorker';
 
-export interface LoadingScreenProps extends NavigationScreenProps {
-
-}
-
 export interface LoadingScreenState {
+    unmount: firebase.Unsubscribe;
 }
 
-class LoadingScreen extends Component<LoadingScreenProps, LoadingScreenState> {
+class LoadingScreen extends React.Component<NavigationScreenProps, LoadingScreenState> {
+    componentWillUnmount() {
+        this.state.unmount();
+    }
+
     componentDidMount() {
-        firebase.auth().onAuthStateChanged(async (user) => {
+        var unmount = firebase.auth().onAuthStateChanged((user) => {
+            console.log("uaee");
+
             if (user) {
-                var data = await FirebaseWorker.getUserData(user);
-                if(data.firstLoad){                  
-                    this.props.navigation.navigate("slideshow");
-                }else {
-                this.props.navigation.navigate("home");
-                }
+                console.log('nonull');
+
+                var data = FirebaseWorker.getUserData(user).then(data => {
+                    if (data.firstLoad) {
+                        console.log("slideshow");
+
+                        this.props.navigation.navigate("slideshow");
+                    } else {
+                        console.log('home');
+
+                        this.props.navigation.navigate("home");
+                    }
+                })
             } else {
+                console.log('login');
+
                 this.props.navigation.navigate("login")
             }
         })
+        this.setState({ unmount });
     }
     render() {
         return LoadingPage("Čekejte prosím, nastavujeme aplikaci");

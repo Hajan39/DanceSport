@@ -16,6 +16,7 @@ import LoadingPage from '../../../objects/loadingPage';
 import {
     AdMobBanner
 } from 'expo-ads-admob';
+
 export interface RanklistScreenProps extends NavigationScreenProps {
 
 }
@@ -47,7 +48,7 @@ class RanklistScreen extends React.Component<RanklistScreenProps, RanklistScreen
     static navigationOptions = ({ navigation }: NavigationScreenProps) => {
         const { params } = navigation.state;
         return {
-            headerLeft: <Button transparent><Icon name="menu" style={{ color: Colors.iconColor }} fontSize={25}
+            headerLeft: <Button transparent onPress={() => navigation.openDrawer()} ><Icon name="menu" style={{ color: Colors.iconColor }} fontSize={25}
 
                 onPress={() => navigation.openDrawer()} /></Button>,
             title: 'Ranklist',
@@ -62,11 +63,11 @@ class RanklistScreen extends React.Component<RanklistScreenProps, RanklistScreen
             ),
             headerStyle: {
                 backgroundColor: Colors.header,
-              },
-              headerTintColor: '#fff',
-              headerTitleStyle: {
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
                 fontWeight: 'bold',
-              },
+            },
         }
     };
 

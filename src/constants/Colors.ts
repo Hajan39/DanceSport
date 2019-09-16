@@ -8,7 +8,7 @@ const green = "#06ff07";
 const shineRed = "#ff0000";
 const shineGreen = "#00ff00";
 const shineBlue = "#0000ff"
-const darkGrey = "#8e8e93";
+const darkGrey = "#393939";
 const transparent = "rgba(0,0,0,0)"
 
 export default {

@@ -34,16 +34,16 @@ class CSTSScreen extends ComponentBase<CSTSScreenProps, CSTSScreenState> {
         var loggedUser = UserStore.getUser()
         return {
             profile: user,
-            likeIt: user && loggedUser &&  loggedUser.cstsIdt == user.profile.IdtClena? undefined: loggedUser && loggedUser.followingCstsIdts.findIndex(x=> x == user.profile.IdtClena)>0,
+            likeIt: user && loggedUser && loggedUser.cstsIdt == user.profile.IdtClena ? undefined : loggedUser && loggedUser.followingCstsIdts.findIndex(x => x == user.profile.IdtClena) > 0,
             loggedUser: loggedUser
         }
     }
 
     static navigationOptions = ({ navigation }: NavigationScreenProps) => {
         const { params } = navigation.state;
-        
+
         return {
-            headerLeft: <Button transparent><Icon name="menu" style={{ color: "black" }}
+            headerLeft: <Button transparent onPress={() => navigation.openDrawer()} ><Icon name="menu" style={{ color: Colors.white }}
                 onPress={() => navigation.openDrawer()} /></Button>,
 
             title: navigation.state.params && navigation.state.params.name || 'Profil',
@@ -53,8 +53,8 @@ class CSTSScreen extends ComponentBase<CSTSScreenProps, CSTSScreenState> {
                 shadowColor: 'transparent'
             },
             headerRight: (<>
-                {params && params.likeIt!=undefined && <Icon
-                    style={{ paddingRight: 20 }}
+                {params && params.likeIt != undefined && <Icon
+                    style={{ paddingRight: 20, color: Colors.white }}
                     name={params.likeIt ? "heart" : "heart-o"}
                     fontSize={25}
                     color="red"
@@ -63,15 +63,15 @@ class CSTSScreen extends ComponentBase<CSTSScreenProps, CSTSScreenState> {
 
             </>
             ),
-              headerTintColor: '#fff',
-              headerTitleStyle: {
+            headerTintColor: '#fff',
+            headerTitleStyle: {
                 fontWeight: 'bold',
-              },
+            },
         }
     };
 
     toggleFavorites = () => {
-        this.setState({ likeIt: !this.state.likeIt  });
+        this.setState({ likeIt: !this.state.likeIt });
         this.props.navigation.setParams({
             likeIt: !this.state.likeIt
         })

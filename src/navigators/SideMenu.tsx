@@ -5,33 +5,53 @@ import { User } from '../objects/firebaseUser';
 import { Avatar, Overlay, Divider } from 'react-native-elements';
 import Colors from '../constants/Colors';
 import { ActionSheet, Button, Icon } from 'native-base';
-import { Permissions, ImagePicker } from 'expo';
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker'
 import FirebaseWorker from '../objects/FirebaseWorker';
 import Layout from '../constants/Layout';
 import QRCode from 'react-native-qrcode';
 import CustomIcon from '../CustomIcon';
 import { ComponentBase } from 'resub';
 import UserStore from '../strores/UserStore';
+import Login from '../functions/loginFunctions';
+import { deliveryClient, Shop } from '../objects/kenticoObjects';
+import { log } from 'util';
 
 export interface SideMenuProps {
     updateImage: (url: string) => void
 }
 export interface SideMenuState {
     data?: User,
-    isOverlayVisible: boolean
+    isOverlayVisible: boolean,
+    visibility?: {csts: boolean, wdsf: boolean},
+    shops?: Shop[]
 }
 class SideMenu extends ComponentBase<SideMenuProps, SideMenuState> {
-     protected _buildState(props: SideMenuProps, initialBuild: boolean): SideMenuState {       
+    protected _buildState(props: SideMenuProps, initialBuild: boolean): SideMenuState {
         return {
             data: UserStore.getUser(),
-            isOverlayVisible: false
+            isOverlayVisible: false,
+            visibility: UserStore.getVisibleSettings(),
         }
     }
- 
-    navigateToScreen = (route: string) => () => {
+
+    componentDidMount() {
+        deliveryClient.items<Shop>()
+        .type('shop')
+        .toObservable()
+        .subscribe(response => {
+            console.log('SideMenu', response.items.length);
+            
+            this.setState({ shops: response.items });;
+        });        
+    }
+
+    navigateToScreen = (route: string, props?: any) => () => {
         const navigateAction = NavigationActions.navigate({
-            routeName: route
+            routeName: route,
+            params: props
         });
+        
         this.props.navigation.dispatch(navigateAction);
     }
     viewQrCode = () => {
@@ -52,8 +72,13 @@ class SideMenu extends ComponentBase<SideMenuProps, SideMenuState> {
                         this._pickImage(true)
                         break;
                     case 1:
-                        await Permissions.askAsync(Permissions.CAMERA, Permissions.CAMERA_ROLL);
-                        this._pickImage(false)
+                            const permission = await Permissions.getAsync(Permissions.CAMERA_ROLL);
+                            if (permission.status !== 'granted') {
+                                const newPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+                                if (newPermission.status === 'granted') {
+                                    this._pickImage(false)
+                                }
+                            } 
                     default:
                         break;
                 }
@@ -108,7 +133,7 @@ class SideMenu extends ComponentBase<SideMenuProps, SideMenuState> {
                     </View>
                 </Overlay>}
                 <ScrollView>
-                {this.state.data && <View style={styles.headerContainer}>
+                    {this.state.data && <View style={styles.headerContainer}>
                         <View style={{ flex: 1, width: 280, flexDirection: 'row' }} >
                             <Avatar
                                 showEditButton
@@ -141,34 +166,33 @@ class SideMenu extends ComponentBase<SideMenuProps, SideMenuState> {
                     <Divider />
 
                     <View>
-                        <Button icon full light style={{ justifyContent: "flex-start" }} block onPress={this.navigateToScreen('Home')} >
-                            <Icon type="FontAwesome" name="newspaper-o" />
-                            <Text>Novinky</Text>
+                        <Button icon full transparent style={{ justifyContent: "flex-start" }} block onPress={this.navigateToScreen('Home')} >
+                            <Icon style={{ color: Colors.darkGrey }} type="FontAwesome" name="newspaper-o" />
+                            <Text style={{ color: Colors.darkGrey }}>Novinky</Text>
                         </Button>
                         <Text style={styles.sectionHeadingStyle}>Svazy a federace</Text>
-                        <Button icon full light style={{ justifyContent: "flex-start" }} block onPress={this.navigateToScreen('WDSF')} >
-                        <CustomIcon size={26} style={{paddingHorizontal: 15}} name="wdsf" />
-                            <Text>WDSF</Text>
-                        </Button>
-                        <Button icon full light style={{ justifyContent: "flex-start" }} block onPress={this.navigateToScreen('CSTS')} >
-                            <CustomIcon size={26} style={{paddingHorizontal: 15}} name="csts" />
-                            <Text>CSTS</Text>
-                        </Button>
-                        
+                        {this.state.visibility&&this.state.visibility.csts && <Button icon full transparent style={{ justifyContent: "flex-start" }} block onPress={this.navigateToScreen('CSTS')} >
+                            <CustomIcon size={26} style={{ paddingHorizontal: 15, color: Colors.darkGrey }} name="csts" />
+                            <Text style={{ color: Colors.darkGrey }}>ČSTS</Text>
+                        </Button>}
+                        {this.state.visibility&&this.state.visibility.wdsf && <Button icon full transparent style={{ justifyContent: "flex-start" }} block onPress={this.navigateToScreen('WDSF')} >
+                            <CustomIcon size={26} style={{ paddingHorizontal: 15, color: Colors.darkGrey }} name="wdsf" />
+                            <Text style={{ color: Colors.darkGrey }}>WDSF</Text>
+                        </Button>}
                         <Divider />
-                        <Button icon full light style={{ justifyContent: "flex-start" }} block onPress={this.navigateToScreen('About')} >
-                            <Icon type="FontAwesome" name="info" />
-                            <Text>O aplikaci</Text>
+                        <Button icon full transparent style={{ justifyContent: "flex-start" }} block onPress={this.navigateToScreen('About')} >
+                            <Icon style={{ color: Colors.darkGrey }} type="FontAwesome" name="info" />
+                            <Text style={{ color: Colors.darkGrey }}>O aplikaci</Text>
                         </Button>
                     </View>
                 </ScrollView>
-                <Button icon full light style={{ justifyContent: "flex-start" }} block onPress={this.navigateToScreen('Settings')} >
-                    <Icon type="MaterialIcons" name="settings" />
-                    <Text>Nastaveni</Text>
+                <Button icon full transparent style={{ justifyContent: "flex-start" }} block onPress={this.navigateToScreen('Settings')} >
+                    <Icon style={{ color: Colors.darkGrey }} type="MaterialIcons" name="settings" />
+                    <Text style={{ color: Colors.darkGrey }}>Nastavení</Text>
                 </Button>
-                <Button iconRight style={styles.footerContainer} onPress={() => FirebaseWorker.logout()}>
-                    <Text style={{ color: Colors.white }}>Odhlasit se</Text>
-                    <Icon type="FontAwesome" name="sign-out" />
+                <Button iconRight style={styles.footerContainer} onPress={() => Login.signOut().then(() => FirebaseWorker.logout())}>
+                    <Text style={{ color: Colors.darkGrey }}>Odhlásit se</Text>
+                    <Icon style={{ color: Colors.darkGrey }} type="FontAwesome" name="sign-out" />
                 </Button>
             </SafeAreaView>
         );
@@ -178,31 +202,31 @@ class SideMenu extends ComponentBase<SideMenuProps, SideMenuState> {
 const styles = StyleSheet.create({
     container: {
         paddingTop: StatusBar.currentHeight,
-        backgroundColor: Colors.header,
+        backgroundColor: Colors.white,
         flex: 1
     },
     headerContainer: {
         paddingTop: 5,
-        backgroundColor: Colors.header,
+        backgroundColor: Colors.white,
         height: 100,
         flexDirection: "row"
     },
     name: {
-        color: Colors.white,
+        color: Colors.darkGrey,
         fontSize: 25
     },
     headerText: {
-        color: Colors.white,
+        color: Colors.darkGrey,
     },
     navItemStyle: {
         padding: 10
     },
     navSectionStyle: {
-        backgroundColor: "white",
+        backgroundColor: Colors.grey,
         color: Colors.black
     },
     sectionHeadingStyle: {
-        backgroundColor: Colors.header,
+        backgroundColor: Colors.grey,
         color: Colors.white,
         fontWeight: "bold",
         paddingVertical: 15,
@@ -211,7 +235,7 @@ const styles = StyleSheet.create({
     footerContainer: {
         padding: 20,
         color: Colors.white,
-        backgroundColor: Colors.header,
+        backgroundColor: Colors.white,
         justifyContent: "space-between",
         flexDirection: "row"
     }

@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { ListItem, Text } from 'native-base';
+import { ListItem } from 'native-base';
+import { Text } from 'react-native';
+import Colors from '../constants/Colors';
 
 export interface WDSFListItemProps {
     wdsfIdt: number,
@@ -14,7 +16,7 @@ const WDSFListItem: React.SFC<WDSFListItemProps> = (props: WDSFListItemProps) =>
             props.onClick(props.wdsfIdt)
         }>
             <Text>{props.name}</Text>
-            <Text note>{props.wdsfIdt}</Text>
+            <Text style={{color: Colors.grey, fontSize: 10}}>{props.wdsfIdt}</Text>
         </ListItem>
     );
 }

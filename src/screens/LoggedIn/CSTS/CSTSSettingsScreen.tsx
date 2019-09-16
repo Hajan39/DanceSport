@@ -48,11 +48,11 @@ class CSTSSettingsSceen extends React.Component<CSTSSettingsSceenProps, CSTSSett
             ),
             headerStyle: {
                 backgroundColor: Colors.header,
-              },
-              headerTintColor: '#fff',
-              headerTitleStyle: {
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
                 fontWeight: 'bold',
-              },
+            },
         }
     };
 
@@ -65,7 +65,7 @@ class CSTSSettingsSceen extends React.Component<CSTSSettingsSceenProps, CSTSSett
             'Jste si jisti?',
             'Jméno ' + name + ' nesouhlasí se jménem ' + this.state.user.name + ". Jste to opravdu vy?",
             [
-                { text: 'NE'},
+                { text: 'NE' },
                 { text: 'ANO', onPress: () => FirebaseWorker.updateCSTSProfile(profile) },
             ],
             { cancelable: false },

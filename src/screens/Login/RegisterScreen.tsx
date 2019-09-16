@@ -52,27 +52,28 @@ class RegisterScreen extends React.Component<NavigationScreenProps, RegisterScre
         return (this.state.loading ? LoadingPage("Registrace") : <KeyboardAvoidingView style={{ flex: 1, flexDirection: "column" }} behavior="padding" enabled>
             <Image source={require("../../../assets/logo.png")} resizeMode="contain" style={{ alignContent: "center", alignItems: "center", alignSelf: "center", width: '90%', height: '90%', flex: 1 }} />
             <Divider />
-            <ScrollView style={{ flex: 2 }}>
-                <Reinput label="JMÉNO" keyboardType="default" style={{ width: '80%', alignSelf: "center" }} placeholder="Martin" value={this.state.name} onChangeText={(name: any) => this.setState({ name })} error={this.isFilled(this.state.name)} />
-                <Reinput label="PŘÍJMENÍ" keyboardType="default" style={{ width: '80%', alignSelf: "center" }} placeholder="Novák" value={this.state.surname} onChangeText={(surname: any) => this.setState({ surname })} error={this.isFilled(this.state.surname)} />
-                <Reinput label="EMAIL" keyboardType="email-address" style={{ width: '80%', alignSelf: "center" }} placeholder="john@email.com" value={this.state.email} onChangeText={(email: any) => this.setState({ email })} error={this.isFilled(this.state.email)} />
-                <Reinput label="HESLO" secureTextEntry placeholder="************" value={this.state.password} style={{ width: '80%', alignSelf: "center" }} onChangeText={(password: any) => this.setState({ password })} error={this.isFilled(this.state.password)} />
-                <Reinput keyboardType="number-pad" style={{ width: '80%', alignSelf: "center" }} label='WDSF MIN' value={this.state.wdsfMin} onChangeText={(wdsfMin: any) => this.setState({ wdsfMin })} />
-                <Reinput keyboardType="number-pad" style={{ width: '80%', alignSelf: "center" }} label='CSTS IDT' value={this.state.cstsIdt} onChangeText={(cstsIdt: any) => this.setState({ cstsIdt })} />
+            <View style={{ flex: 2 }}>
+                <ScrollView >
+                    <Reinput label="JMÉNO" keyboardType="default" style={{ width: '80%', alignSelf: "center" }} placeholder="Martin" value={this.state.name} onChangeText={(name: any) => this.setState({ name })} error={this.isFilled(this.state.name)} />
+                    <Reinput label="PŘÍJMENÍ" keyboardType="default" style={{ width: '80%', alignSelf: "center" }} placeholder="Novák" value={this.state.surname} onChangeText={(surname: any) => this.setState({ surname })} error={this.isFilled(this.state.surname)} />
+                    <Reinput label="EMAIL" keyboardType="email-address" style={{ width: '80%', alignSelf: "center" }} placeholder="john@email.com" value={this.state.email} onChangeText={(email: any) => this.setState({ email })} error={this.isFilled(this.state.email)} />
+                    <Reinput label="HESLO" secureTextEntry placeholder="************" value={this.state.password} style={{ width: '80%', alignSelf: "center" }} onChangeText={(password: any) => this.setState({ password })} error={this.isFilled(this.state.password)} />
+                    <Reinput keyboardType="number-pad" style={{ width: '80%', alignSelf: "center" }} label='WDSF MIN' value={this.state.wdsfMin} onChangeText={(wdsfMin: any) => this.setState({ wdsfMin })} />
+                    <Reinput keyboardType="number-pad" style={{ width: '80%', alignSelf: "center" }} label='CSTS IDT' value={this.state.cstsIdt} onChangeText={(cstsIdt: any) => this.setState({ cstsIdt })} />
 
-                {this.state.error &&
-                    <Text style={{ color: Colors.red }}>{this.state.error}</Text>
-                }
-                <View style={{ width: '100%', alignContent: "center", alignItems: "center", flexDirection: "row", justifyContent: "space-evenly", paddingBottom: 20 }}>
-                    <Button block light style={{ width: '40%', alignSelf: "center", borderRadius: 5 }} onPress={() => this.props.navigation.navigate("login")}>
-                        <Text>Zrušit</Text>
-                    </Button>
-                    <Button block info style={{ width: '40%', alignSelf: "center", borderRadius: 5 }} onPress={() => this.onSignUpUser()}>
-                        <Text>Registrace</Text>
-                    </Button>
-                </View>
-            </ScrollView>
-
+                    {this.state.error &&
+                        <Text style={{ color: Colors.red }}>{this.state.error}</Text>
+                    }
+                    <View style={{ width: '100%', alignContent: "center", alignItems: "center", flexDirection: "row", justifyContent: "space-evenly", paddingBottom: 20 }}>
+                        <Button block light style={{ width: '40%', alignSelf: "center", borderRadius: 5 }} onPress={() => this.props.navigation.navigate("login")}>
+                            <Text>Zrušit</Text>
+                        </Button>
+                        <Button block info style={{ width: '40%', alignSelf: "center", borderRadius: 5 }} onPress={() => this.onSignUpUser()}>
+                            <Text>Registrace</Text>
+                        </Button>
+                    </View>
+                </ScrollView>
+            </View>
         </KeyboardAvoidingView >
         );
     }

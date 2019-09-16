@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Component } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { ComponentBase } from 'resub';
-import { View, Card, Text, Body, CardItem, Right, Icon, Left, Button, Item, Input, Fab } from 'native-base';
+import { View, Card, Body, CardItem, Right, Icon, Left, Button, Item, Input, Fab } from 'native-base';
 import { SearchBar } from 'react-native-elements';
 import UserStore from '../../../strores/UserStore';
 import { User } from '../../../objects/firebaseUser';
@@ -12,6 +12,7 @@ import { NavigationScreenProps } from 'react-navigation';
 import { debounce } from 'lodash';
 import FirebaseWorker from '../../../objects/FirebaseWorker';
 import Colors from '../../../constants/Colors';
+import { Text } from 'react-native';
 
 export interface FavoritesWdsfScreenProps extends NavigationScreenProps, React.Props<any> {
 
@@ -19,7 +20,7 @@ export interface FavoritesWdsfScreenProps extends NavigationScreenProps, React.P
 
 export interface FavoritesWdsfScreenState {
     search?: string,
-    user?: User ,
+    user?: User,
     followingWdsf?: WdsfProfile[]
     filteredWdsf?: WdsfProfile[]
     showAdd: boolean,
@@ -56,18 +57,19 @@ class FavoritesWdsfScreen extends ComponentBase<FavoritesWdsfScreenProps, Favori
     static navigationOptions = ({ navigation }: NavigationScreenProps) => {
         const { params } = navigation.state;
         return {
-        headerLeft: <Button transparent><Icon name="menu" style={{color: Colors.iconColor}}
-        onPress={ () => navigation.openDrawer() } /></Button>,
-        title: 'WDSF - Oblíbené',
-
-        headerStyle: {
-            backgroundColor: Colors.header,
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-    }};
+            headerLeft: <Button transparent onPress={() => navigation.openDrawer()} >
+                <Icon name="menu" style={{ color: Colors.iconColor }} />
+            </Button>,
+            title: 'Oblíbené',
+            headerStyle: {
+                backgroundColor: Colors.header,
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                fontWeight: 'bold',
+            },
+        }
+    };
 
     updateSearch = (search: string) => {
         var toSearch = search.toLowerCase()
@@ -108,7 +110,7 @@ class FavoritesWdsfScreen extends ComponentBase<FavoritesWdsfScreenProps, Favori
                     value={this.state.search}
                 />
                 <ScrollView>
-                {this.state.showAdd &&
+                    {this.state.showAdd &&
                         <Card>
                             <Item success={!!this.state.searchedUser}>
                                 {this.state.searchedUser && <Text>{this.state.searchedUser.name} {this.state.searchedUser.surname}</Text>}
@@ -124,7 +126,7 @@ class FavoritesWdsfScreen extends ComponentBase<FavoritesWdsfScreenProps, Favori
                                     <Text onPress={() => this.showWdsfProfile(profile.id)}>
                                         {profile.name} {profile.surname}
                                     </Text>
-                                    <Text note>{profile.id}</Text>
+                                    <Text style={{color: Colors.grey, fontSize: 10}}>{profile.id}</Text>
                                 </Body>
                                 <Right>
                                     <Icon onPress={() => this.removeWdsfId(profile.id)} type="FontAwesome" name="trash" color="red" />

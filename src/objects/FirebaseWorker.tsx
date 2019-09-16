@@ -1,16 +1,13 @@
 import firebase from 'firebase/app';
 import '@firebase/firestore'
 import '@firebase/storage'
-import firebaseConfig from '../config/firebase';
 import { User, createNewUser } from './firebaseUser';
 import { Profile } from './profileData';
 import { WdsfProfile } from './wdsfData';
-import {  QuerySnapshot } from '@firebase/firestore-types';
-import { Platform } from 'react-native';
-import * as Google from 'expo-google-app-auth';
+import { QuerySnapshot } from '@firebase/firestore-types';
 import UserStore from '../strores/UserStore';
+import Login from '../functions/loginFunctions';
 
-firebase.initializeApp(firebaseConfig);
 var db = firebase.firestore();
 var storage = firebase.storage().ref();
 
@@ -41,23 +38,11 @@ async function uploadImage(uri: string, user: User): Promise<string> {
     return newUrl;
 }
 
-
-async function loginUser(email: string, password: string): Promise<string | undefined> {
-    try {
-        firebase.auth().signInWithEmailAndPassword(email, password).then(x => {
-            if (x.user) updateLogin(x.user)
-        });
-    }
-    catch (error) {
-        return error.message;
-    }
-}
-
 async function getUserData(fireuser: firebase.User): Promise<User> {
     var coll = db.collection('users').doc(fireuser.uid)
     coll.onSnapshot((snapshot: firebase.firestore.DocumentSnapshot) => {
         console.log("snapshot", snapshot.exists);
-        
+
         if (snapshot.exists) {
             var user = snapshot.data() as User;
             UserStore.setUser(user)
@@ -71,14 +56,8 @@ async function getUserData(fireuser: firebase.User): Promise<User> {
 }
 
 function registerUser(name: string, surname: string, email: string, password: string, cstsIdt: number | null, wdsfId: number | null): void {
-    firebase.auth().createUserWithEmailAndPassword(email, password).then(user => {
-        if (user.user) {
-            user.user.updateProfile({
-                displayName: name + " " + surname
-            })
-            db.collection('users').doc(user.user.uid).set(createNewUser(user.user, name + " " + surname, cstsIdt, wdsfId));
-        } else
-            throw new Error("USER CANNOT BE CREATED");
+    Login.registerUserWithEmailAndPassword(name, surname, email, password).then(user => {
+        db.collection('users').doc(user.uid).set(createNewUser(user, name + " " + surname, cstsIdt, wdsfId));
     }).catch(err => {
         throw err;
     })
@@ -106,7 +85,7 @@ async function getCstsDataByIdt(cstsIdt: number): Promise<User | undefined> {
     return getUser(querySnapshot)
 }
 
-function getUser(querySnapshot:QuerySnapshot) {
+function getUser(querySnapshot: QuerySnapshot) {
     if (!querySnapshot.empty) {
         var max = querySnapshot.docs.reduce((prev, current) => {
             var prevD = prev.data() as User;
@@ -132,13 +111,21 @@ async function updateCSTSFavorites(cstsIdt: number[]) {
     var cdata = firebase.auth().currentUser;
     if (cdata) {
         const userRef = db.collection("users").doc(cdata.uid);
-        var data = userRef.update({followingCstsIdts: cstsIdt })
-       data.then(x=> {
-        
-       }).catch(x=> {
-           console.log("err", x);
-           
-       })
+        var data = userRef.update({ followingCstsIdts: cstsIdt })
+        data.then(x => {
+
+        }).catch(x => {
+            console.log("err", x);
+
+        })
+    }
+}
+
+async function updateVisibility(visibility: {csts: boolean, wdsf: boolean}){
+    var cdata = firebase.auth().currentUser;
+    if (cdata) {
+        const userRef = db.collection("users").doc(cdata.uid);
+        var data = userRef.update({ interest: visibility })
     }
 }
 
@@ -146,80 +133,16 @@ async function updateWDSFFavorites(wdsfId: number[]) {
     var cdata = firebase.auth().currentUser;
     if (cdata) {
         const userRef = db.collection("users").doc(cdata.uid);
-        var data = userRef.update({followingWdsfIds: wdsfId })
-       data.then(x=> {
-        
-       }).catch(x=> {
-           console.log("err", x);
-           
-       })
+        var data = userRef.update({ followingWdsfIds: wdsfId })
+        data.then(x => {
+
+        }).catch(x => {
+            console.log("err", x);
+
+        })
     }
 }
 
-function resetPass(email: string) {
-    firebase.auth().sendPasswordResetEmail(email).then(function () {
-        // Email sent.
-    }).catch(function (error) {
-        // An error happened.
-    });
-
-}
-async function loginGoogleUser() {
-    try {
-        const result = await Google.logInAsync({
-            behavior: "web",
-            clientId: Platform.OS === 'android' ? "590146774413-5mggdst0c2f3lvf66upn11oav95jn28u.apps.googleusercontent.com" : "590146774413-8pi07nhecjc2dp163djtptuqagsbo14r.apps.googleusercontent.com",
-            androidClientId: "590146774413-u353107dp84kae851sdiao48m8pdvgkq.apps.googleusercontent.com",
-            iosClientId: "590146774413-8pi07nhecjc2dp163djtptuqagsbo14r.apps.googleusercontent.com",
-            scopes: ['profile', 'email'],
-        });
-
-        if (result.type === 'success') {
-            onSignIn(result)
-            return result.accessToken;
-        } else {
-            return { cancelled: true };
-        }
-    } catch (e) {
-        return { error: true };
-    }
-}
-function isUserEqual(googleUser: any, firebaseUser: any) {
-    if (firebaseUser) {
-        var providerData = firebaseUser.providerData;
-        for (var i = 0; i < providerData.length; i++) {
-            if (providerData[i].providerId === firebase.auth.GoogleAuthProvider.PROVIDER_ID &&
-                providerData[i].uid === googleUser.getBasicProfile().getId()) {
-                // We don't need to reauth the Firebase connection.
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-async function onSignIn(googleUser: any) {
-    // We need to register an Observer on Firebase Auth to make sure auth is initialized.
-    var unsubscribe = firebase.auth().onAuthStateChanged(function (firebaseUser) {
-        unsubscribe();
-        // Check if we are already signed-in Firebase with the correct user.
-        if (!isUserEqual(googleUser, firebaseUser)) {
-            // Build Firebase credential with the Google ID token.
-            var credential = firebase.auth.GoogleAuthProvider.credential(
-                googleUser.idToken,
-                googleUser.accessToken
-            );
-            // Sign in with credential from the Google user.
-            firebase.auth().signInWithCredential(credential).then(x => {
-                if (x.user)
-                    updateLogin(x.user)
-
-            }).catch(function (error) {
-
-            });
-        }
-    });
-}
 
 async function updateLogin(user: firebase.User) {
     var exist = await db.collection("users").doc(user.uid).get();
@@ -240,21 +163,22 @@ function setInitCompleted() {
 
 function logout() {
     console.log("signing out");
-    firebase.auth().signOut();
     UserStore.signOut();
 }
 
+
+// -------------- WDSF -------------- \\
+
 const FirebaseWorker = {
     updateWDSFFavorites,
-    loginGoogleUser,
     getCstsDataByIdt,
-    resetPass,
+    updateLogin,
     registerUser,
     updateCSTSFavorites,
     uploadImage,
     getWdsfDataByIdt,
+    updateVisibility,
     setInitCompleted,
-    loginUser,
     getUserData,
     updateCSTSProfile,
     logout,

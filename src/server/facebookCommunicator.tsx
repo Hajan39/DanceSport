@@ -1,5 +1,5 @@
 import { FbResponseObject } from "../objects/FacebookResponse";
-import {FB_APP_ID, FB_APP_SECRET} from 'react-native-dotenv'
+import { FB_APP_ID, FB_APP_SECRET } from 'react-native-dotenv'
 
 export async function getAccessToken() {
     const x = await fetch(`https://graph.facebook.com/oauth/access_token?client_id=${FB_APP_ID}&client_secret=${FB_APP_SECRET}&grant_type=client_credentials`);

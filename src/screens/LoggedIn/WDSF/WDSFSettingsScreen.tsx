@@ -49,11 +49,11 @@ class WDSFSettingsSceen extends React.Component<WDSFSettingsSceenProps, WDSFSett
             ),
             headerStyle: {
                 backgroundColor: Colors.header,
-              },
-              headerTintColor: '#fff',
-              headerTitleStyle: {
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
                 fontWeight: 'bold',
-              },
+            },
         }
     };
 

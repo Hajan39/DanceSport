@@ -38,7 +38,9 @@ const homeScreenStack = createStackNavigator(
             ),
         }),
     }
-);
+
+    );
+
 const aboutScreenStack = createStackNavigator(
     {
         About: AboutScreen
@@ -65,13 +67,13 @@ const settingsScreenStack = createStackNavigator(
         cstsSettings: CSTSSettingsSceen,
         wdsfSettings: WDSFSettingsSceen
     }, {
-        navigationOptions: ({ navigation }) => ({
-            initialRouteName: 'Settings',
-            headerMode: "none",
-            showLabel: false,
-        })
+    navigationOptions: ({ navigation }) => ({
+        initialRouteName: 'Settings',
+        headerMode: "none",
+        showLabel: false,
+    })
 
-    });
+});
 
 
 export interface NavigationState {
@@ -81,15 +83,15 @@ export interface NavigationState {
 class CustomTabsNavigator extends ComponentBase<{}, NavigationState> {
     protected _buildState(props: {}, initialBuild: boolean): NavigationState {
         var settings = UserStore.getRouterSettings();
-       
-            return {
-                Navigation: settings ? this.getNavigation(settings) : LoginNavigator,
-            }
-        
-       
+
+        return {
+            Navigation: settings ? this.getNavigation(settings) : LoginNavigator,
+        }
+
+
     }
 
-    getNavigation(data: {firstLoad: boolean, csts: boolean, wdsf: boolean}) {
+    getNavigation(data: { firstLoad: boolean, csts: boolean, wdsf: boolean }) {
         const screens: NavigationRouteConfigMap = {};
 
         if (data.firstLoad)

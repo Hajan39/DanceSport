@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Tanecni sport",
+    "name": "Taneční sport",
     "slug": "Dance_Sport_App",
     "privacy": "public",
     "sdkVersion": "34.0.0",
@@ -8,7 +8,7 @@
       "ios",
       "android"
     ],
-    "version": "1.0.4",
+    "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
     "splash": {
@@ -22,12 +22,23 @@
       "**/*"
     ],
     "ios": {
+      "config": {
+        "googleSignIn": {
+          "reservedClientId": "com.googleusercontent.apps.590146774413-a5kd520vg3lb8a2rgh4q2tll6rau27de"
+        }
+      },
       "bundleIdentifier": "com.dancesportfamily.tanecnisport",
-      "buildNumber": "0.0.4",
+      "buildNumber": "0.0.5",
       "supportsTablet": true
     },
     "android": {
-      "versionCode": 4,
+      "config": {
+        "googleSignIn": {
+          "apiKey": "AIzaSyAPcpAOkj1a9GxXYqtBIBGg3Q1KBFUW18c",
+          "certificateHash": "61FB8E15DE0FC01D95EC28C21241BDC8454A2083"
+        }
+      },
+      "versionCode": 5,
       "package": "com.dancesportfamily.tanecnisport",
       "permissions": [
         "CAMERA",

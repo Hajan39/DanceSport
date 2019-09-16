@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { ComponentBase } from 'resub';
-import { View, Card, Text, Body, CardItem, Right, Icon, Button, Fab, Input, Item } from 'native-base';
+import { View, Card, Body, CardItem, Right, Icon, Button, Fab, Input, Item } from 'native-base';
 import { SearchBar } from 'react-native-elements';
 import UserStore from '../../../strores/UserStore';
 import { User } from '../../../objects/firebaseUser';
@@ -11,6 +11,7 @@ import { Profile } from '../../../objects/profileData';
 import CSTS from '../../../server/cstsCommunicator';
 import Colors from '../../../constants/Colors';
 import FirebaseWorker from '../../../objects/FirebaseWorker';
+import { Text } from 'react-native';
 
 export interface FavoritesCstsScreenProps extends NavigationScreenProps, React.Props<any> {
 
@@ -56,16 +57,16 @@ class FavoritesCstsScreen extends ComponentBase<FavoritesCstsScreenProps, Favori
     static navigationOptions = ({ navigation }: NavigationScreenProps) => {
         const { params } = navigation.state;
         return {
-            headerLeft: <Button transparent><Icon name="menu" style={{ color: Colors.iconColor }}
-                onPress={() => navigation.openDrawer()} /></Button>,
-            title: 'CSTS - Oblíbené',
+            headerLeft: <Button transparent onPress={() => navigation.openDrawer()} ><Icon name="menu" style={{ color: Colors.iconColor }}
+            /></Button>,
+            title: 'Oblíbené',
             headerStyle: {
                 backgroundColor: Colors.header,
-              },
-              headerTintColor: '#fff',
-              headerTitleStyle: {
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
                 fontWeight: 'bold',
-              },
+            },
         }
     };
 
@@ -125,7 +126,7 @@ class FavoritesCstsScreen extends ComponentBase<FavoritesCstsScreenProps, Favori
                                     <Text onPress={() => this.showCstsProfile(profile.IdtClena)}>
                                         {profile.Jmeno} {profile.Prijmeni}
                                     </Text>
-                                    <Text note>{profile.IdtClena}</Text>
+                                    <Text style={{color: Colors.grey, fontSize: 10}}>{profile.IdtClena}</Text>
                                 </Body>
                                 <Right>
                                     <Icon onPress={() => this.removeCstsIdt(profile.IdtClena)} type="FontAwesome" name="trash" color="red" />

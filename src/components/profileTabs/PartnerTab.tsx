@@ -1,6 +1,5 @@
 import React from "react";
-import { List, Item, ListItem, Text } from "native-base";
-import { profile } from "console";
+import { List } from "native-base";
 import { Partner, Profile, PartnerItem } from "../../objects/profileData";
 import { ScrollView } from "react-native";
 import BackgroundImage from "../BackgroundImage";
