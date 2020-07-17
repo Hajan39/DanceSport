@@ -29,7 +29,7 @@
     "expo-permissions": "~6.0.0",
     "firebase": "6.0.2",
     "kentico-cloud-delivery": "^6.2.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.19",
     "native-base": "^2.13.6",
     "react": "16.8.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-34.0.0.tar.gz",
